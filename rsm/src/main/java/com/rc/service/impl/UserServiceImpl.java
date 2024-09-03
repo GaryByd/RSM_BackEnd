@@ -14,6 +14,7 @@ import com.rc.mapper.UserMapper;
 import com.rc.service.IUserService;
 import com.rc.utils.Md5Util;
 import com.rc.utils.RegexUtils;
+import com.rc.utils.UserHolder;
 import com.rc.utils.WeiChatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -166,6 +167,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
     }
+
+    @Override
+    public Result queryUserById(Long id) {
+        User user = getById(id);
+        //判断用户是否存在
+        if(user==null){
+            return Result.fail("用户不存在");
+        }
+        UserDTO userDTO = new UserDTO(user.getId(),user.getNickName(),user.getIcon(),user.getPhone(),"");
+        return Result.ok("获取成功",userDTO);
+    }
+
+    @Override
+    public Result userUpdateById(User user) {
+        UserDTO userDTO = UserHolder.getUser();
+        long userId = userDTO.getId();
+//        //用来测试
+//        userId = 1012;
+        boolean success =  updateById(user);
+        if(!success){
+            return Result.fail("更新失败");
+        }
+
+        User newUser = getById(userId);
+        userDTO = new UserDTO(newUser.getId(),newUser.getNickName(),newUser.getIcon(),newUser.getPhone(),"");
+        return Result.ok("更新成功",userDTO);
+    }
+
 
 //    private User createUserWithPhone(String phone) {
 //        //创建用户

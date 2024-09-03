@@ -1,7 +1,6 @@
 package com.rc.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.rc.domain.dto.ItemsDoneDTO;
+import com.rc.domain.dto.ItemsFormDTO;
 import com.rc.domain.dto.PatrolList;
 import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmPatrolItem;
@@ -39,8 +38,8 @@ public class RsmPatrolItemServiceImpl extends ServiceImpl<RsmPatrolItemMapper, R
 
 
     @Override
-    public Result patrolItemDone(ItemsDoneDTO itemsDoneDTO, Integer checklistId, Integer itemId) {
-        int updatedRows  = patrolItemMapper.patrolItemDone(itemsDoneDTO, checklistId, itemId);
+    public Result patrolItemDone(ItemsFormDTO itemsFormDTO, Integer checklistId, Integer itemId) {
+        int updatedRows  = patrolItemMapper.patrolItemDone(itemsFormDTO, checklistId, itemId);
         if(updatedRows == 0){
             return Result.fail("修改失败");
         }

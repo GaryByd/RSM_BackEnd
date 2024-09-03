@@ -1,6 +1,6 @@
 package com.rc.service;
 
-import com.rc.domain.dto.ItemsDoneDTO;
+import com.rc.domain.dto.ItemsFormDTO;
 import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmPatrolItem;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,5 +17,5 @@ public interface IRsmPatrolItemService extends IService<RsmPatrolItem> {
 
     Result getPatrolItemByListId(Integer checklistId);
 
-    Result patrolItemDone(ItemsDoneDTO itemsDoneDTO, Integer checklistId, Integer itemId);
+    Result patrolItemDone(ItemsFormDTO itemsFormDTO, Integer checklistId, Integer itemId);
 }

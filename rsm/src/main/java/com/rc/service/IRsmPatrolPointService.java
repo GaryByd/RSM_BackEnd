@@ -1,5 +1,6 @@
 package com.rc.service;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmPatrolPoint;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmPatrolPointService extends IService<RsmPatrolPoint> {
 
+    Result getPatrolPointByListId(Integer pointId);
 }

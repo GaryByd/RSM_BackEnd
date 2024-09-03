@@ -6,7 +6,7 @@ import lombok.Data;
 
 
 @Data
-public class ItemsDoneDTO {
+public class ItemsFormDTO {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "检查描述/隐患描述")

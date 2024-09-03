@@ -63,6 +63,30 @@ public class UserController {
         return userService.bandWithPasswd(loginForm,session);
     }
 
+    @ApiOperation("获取我的用户信息")
+    @GetMapping("/me")
+    public Result me() {
+        // 获取当前登录的用户并返回
+        UserDTO user = UserHolder.getUser();
+        return Result.ok(user);
+    }
+
+    @ApiOperation(value = "根据ID获取用户信息")
+    @GetMapping("/users/{id}")
+    public Result queryUserById(@PathVariable("id") Long id) {
+        return userService.queryUserById(id);
+    }
+
+    @ApiOperation(value = "更新我的用户信息")
+    @PutMapping("/me")
+    public Result updateUser(@RequestBody User user) {
+
+        // 返回用户信息
+        return userService.userUpdateById(user);
+    }
+
+
+
 
 
 

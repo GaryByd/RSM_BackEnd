@@ -3,10 +3,10 @@
 <mapper namespace="com.rc.mapper.RsmPatrolItemMapper">
     <update id="patrolItemDone">
         UPDATE rsm_patrol_item
-        SET handler_desc = #{itemsDoneDTO.handlerDesc},
-            handler_img = #{itemsDoneDTO.handlerImg},
-            remark = #{itemsDoneDTO.remark},
-            status = #{itemsDoneDTO.status}
+        SET handler_desc = #{itemsFormDTO.handlerDesc},
+            handler_img = #{itemsFormDTO.handlerImg},
+            remark = #{itemsFormDTO.remark},
+            status = #{itemsFormDTO.status}
         WHERE patrol_list_id = #{checklistId} AND id = #{itemId}
     </update>
 

@@ -29,6 +29,10 @@ public interface IUserService extends IService<User> {
 
     Result bandWithPasswd(LoginFormDTO loginFormDTO, HttpSession session);
 
+    Result queryUserById(Long id);
+
+    Result userUpdateById(User user);
+
 
 //    Result bandWithPhone(String code, HttpSession session);
 //    Result sign();
