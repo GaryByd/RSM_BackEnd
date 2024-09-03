@@ -1,6 +1,11 @@
 package com.rc.controller;
 
 
+import com.rc.domain.dto.Result;
+import com.rc.service.IRsmPatrolItemService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-09-03
  */
 @RestController
-@RequestMapping("/rsm-patrol-item")
+@RequestMapping("/api/mp/patrol")
 public class RsmPatrolItemController {
 
+    @Autowired
+    private IRsmPatrolItemService patrolItemService;
+    @ApiOperation(value = "根据巡查清单ID获取巡查列表")
+    @RequestMapping("/checklists/{checklist_id}/items")
+    public Result getPatrolItemByListId(
+            @PathVariable("checklist_id") Integer checklistId
+    )
+    {
+        return patrolItemService.getPatrolItemByListId(checklistId);
+    }
 }

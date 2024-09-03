@@ -1,7 +1,10 @@
 package com.rc.mapper;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmPatrolItem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RsmPatrolItemMapper extends BaseMapper<RsmPatrolItem> {
 
+    //根据巡查清单ID获取巡查列表
+    public List<RsmPatrolItem> getPatrolItemByListId(Integer checklistId);
 }

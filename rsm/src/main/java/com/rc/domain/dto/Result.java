@@ -15,12 +15,8 @@ public class Result {
     private Object data;
     private Long total;
 
-    @Data
-    @AllArgsConstructor
-    public static class ListData {
-        private List<?> data;
-        private Integer total;
-    }
+
+
 
 
     //简单的成功 操作成功返回
@@ -38,13 +34,6 @@ public class Result {
     //带数据带信息的成功
     public static Result ok(Object data, String msg){
         return new Result(200, msg, data, null);
-    }
-
-    // 返回为列表时的成功
-    public static Result ok(List<?> data, Integer total){
-        Result result = new Result();
-        ListData listData = new ListData(data, total);
-        return new Result(200, null, listData, total.longValue());
     }
 
     //登入错误

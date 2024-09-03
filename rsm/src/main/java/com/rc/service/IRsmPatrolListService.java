@@ -1,5 +1,6 @@
 package com.rc.service;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmPatrolList;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmPatrolListService extends IService<RsmPatrolList> {
 
+
+    Result getPatrolList(Integer pageNumber, Integer pageSize, String startTime, String endTime, Integer status);
 }

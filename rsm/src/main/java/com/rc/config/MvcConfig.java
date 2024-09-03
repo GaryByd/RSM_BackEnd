@@ -17,19 +17,19 @@ public class MvcConfig implements WebMvcConfigurer {
     private StringRedisTemplate stringRedisTemplate;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //登入拦截器
-        WebMvcConfigurer.super.addInterceptors(registry);
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns(
-                        "/api/mp/smscode/verify",
-                        "/api/mp/smscode/send",
-                        "/api/mp/login/phone",
-                        "/api/mp/login/weixin",
-                        "/api/mp/bindEmloyeeAccount"
-                ).order(1);
-        //token刷新拦截器
-        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate))
-                .addPathPatterns("/**").order(0);
+//        //登入拦截器
+//        WebMvcConfigurer.super.addInterceptors(registry);
+//        registry.addInterceptor(new LoginInterceptor())
+//                .addPathPatterns("/**")
+//                .excludePathPatterns(
+//                        "/api/mp/smscode/verify",
+//                        "/api/mp/smscode/send",
+//                        "/api/mp/login/phone",
+//                        "/api/mp/login/weixin",
+//                        "/api/mp/bindEmloyeeAccount"
+//                ).order(1);
+//        //token刷新拦截器
+//        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate))
+//                .addPathPatterns("/**").order(0);
     }
 }

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -65,15 +67,19 @@ public class RsmPatrolList implements Serializable {
     @ApiModelProperty(value = "删除标志（0代表存在 1代表删除）")
     private Integer delFlag;
 
+    @JsonIgnore
     @ApiModelProperty(value = "创建者")
     private String createBy;
 
+    @JsonIgnore
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
+    @JsonIgnore
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
+    @JsonIgnore
     @ApiModelProperty(value = "修改者")
     private String updateBy;
 
