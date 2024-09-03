@@ -2,7 +2,10 @@ package com.rc.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
+
+@Data
 public class ItemsDoneDTO {
     private static final long serialVersionUID = 1L;
 

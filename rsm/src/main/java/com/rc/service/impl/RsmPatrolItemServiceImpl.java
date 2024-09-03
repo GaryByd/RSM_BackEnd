@@ -1,5 +1,7 @@
 package com.rc.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.rc.domain.dto.ItemsDoneDTO;
 import com.rc.domain.dto.PatrolList;
 import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmPatrolItem;
@@ -32,5 +34,19 @@ public class RsmPatrolItemServiceImpl extends ServiceImpl<RsmPatrolItemMapper, R
         int total = patrolItemByListId.size();
         PatrolList patrolList = new PatrolList(patrolItemByListId, (long) total);
         return Result.ok("查询成功",patrolList);
+    }
+
+
+
+    @Override
+    public Result patrolItemDone(ItemsDoneDTO itemsDoneDTO, Integer checklistId, Integer itemId) {
+        int updatedRows  = patrolItemMapper.patrolItemDone(itemsDoneDTO, checklistId, itemId);
+        if(updatedRows == 0){
+            return Result.fail("修改失败");
+        }
+        //操作成功
+        //查询一下子
+        RsmPatrolItem rsmPatrolItem = query().eq("id", itemId).eq("patrol_list_id", checklistId).one();
+        return Result.ok("修改成功",rsmPatrolItem);
     }
 }

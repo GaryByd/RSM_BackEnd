@@ -1,11 +1,14 @@
 package com.rc.controller;
 
 
+import com.rc.domain.dto.ItemsDoneDTO;
 import com.rc.domain.dto.Result;
 import com.rc.service.IRsmPatrolItemService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -31,5 +34,16 @@ public class RsmPatrolItemController {
     )
     {
         return patrolItemService.getPatrolItemByListId(checklistId);
+    }
+
+    @ApiOperation(value = "巡查项完成")
+    @RequestMapping("/checklists/{checklist_id}/items/{item_id}/done")
+    public Result patrolItemDone(
+            @PathVariable("checklist_id") Integer checklistId,
+            @PathVariable("item_id") Integer itemId,
+            @RequestBody ItemsDoneDTO itemsDoneDTO
+    )
+    {
+        return patrolItemService.patrolItemDone(itemsDoneDTO,checklistId,itemId);
     }
 }
