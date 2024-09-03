@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rc.mapper.RsmPatrolItemMapper">
+    <update id="patrolItemDone">
+        UPDATE rsm_patrol_item
+        SET handler_desc = #{itemsDoneDTO.handlerDesc},
+            handler_img = #{itemsDoneDTO.handlerImg},
+            remark = #{itemsDoneDTO.remark},
+            status = #{itemsDoneDTO.status}
+        WHERE patrol_list_id = #{checklistId} AND id = #{itemId}
+    </update>
+
+    <select id="getPatrolItemByListId" resultType="com.rc.domain.entity.RsmPatrolItem">
+        SELECT *
+        FROM rsm_patrol_item
+        WHERE patrol_list_id = #{checklistId}
+    </select>
+</mapper>
