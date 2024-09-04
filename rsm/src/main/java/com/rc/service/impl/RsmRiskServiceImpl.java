@@ -1,5 +1,6 @@
 package com.rc.service.impl;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmRisk;
 import com.rc.mapper.RsmRiskMapper;
 import com.rc.service.IRsmRiskService;
@@ -17,4 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RsmRiskServiceImpl extends ServiceImpl<RsmRiskMapper, RsmRisk> implements IRsmRiskService {
 
+    @Override
+    public Result getRiskById(Integer riskId) {
+        return Result.ok("操作成功",this.getById(riskId));
+    }
 }

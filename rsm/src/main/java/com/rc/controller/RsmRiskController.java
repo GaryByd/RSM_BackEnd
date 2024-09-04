@@ -1,6 +1,12 @@
 package com.rc.controller;
 
 
+import com.rc.domain.dto.Result;
+import com.rc.service.IRsmRiskService;
+import com.rc.service.IUserService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-09-03
  */
 @RestController
-@RequestMapping("/rsm-risk")
+@RequestMapping("/api/mp")
 public class RsmRiskController {
+    @Autowired
+    private IRsmRiskService rsmRiskService;
 
+
+    @ApiOperation(value = "根据检查项ID获取风险")
+    @RequestMapping("/patrol/checklists/{checklist_id}/items/{item_id}/risks/{risk_id}")
+    public Result getRiskList(
+            @PathVariable("checklist_id") Integer checklistId,
+            @PathVariable("item_id") Integer itemId,
+            @PathVariable("risk_id") Integer riskId
+    )
+    {
+        return rsmRiskService.getRiskById(riskId);
+    }
 }
