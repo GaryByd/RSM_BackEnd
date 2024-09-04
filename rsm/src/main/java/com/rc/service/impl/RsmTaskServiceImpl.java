@@ -1,5 +1,6 @@
 package com.rc.service.impl;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmTask;
 import com.rc.mapper.RsmTaskMapper;
 import com.rc.service.IRsmTaskService;
@@ -17,4 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> implements IRsmTaskService {
 
+    @Override
+    public Result addTask(RsmTask rsmTask) {
+        return null;
+    }
 }

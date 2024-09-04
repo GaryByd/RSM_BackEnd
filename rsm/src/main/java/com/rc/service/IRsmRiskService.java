@@ -15,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IRsmRiskService extends IService<RsmRisk> {
 
     Result getRiskById(Integer riskId);
+
 }
