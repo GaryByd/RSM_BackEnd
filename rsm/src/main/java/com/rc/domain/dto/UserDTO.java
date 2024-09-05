@@ -1,5 +1,6 @@
 package com.rc.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDTO {
     private Long id;
-    private String nickname="";
+    @JsonProperty("nickname")
+    private String nickName;
     private String avatar="";
     private String phone_number="";
     private String token="";

@@ -158,7 +158,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //user转为UserDTO
         UserDTO userDTO = new UserDTO();
         userDTO.setId(newUser.getId());
-        userDTO.setNickname(newUser.getNickName());
+        userDTO.setNickName(newUser.getNickName());
         //头像
         userDTO.setAvatar(newUser.getIcon());
         //电话号码

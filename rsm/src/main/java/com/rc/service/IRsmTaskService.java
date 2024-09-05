@@ -1,7 +1,11 @@
 package com.rc.service;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmTask;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 /**
  * <p>
@@ -13,4 +17,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmTaskService extends IService<RsmTask> {
 
+    Result addTask(RsmTask rsmTask);
+
+    Result getTaskList(Integer pageNumber, Integer pageSize, String startTime, String endTime, Integer status);
+
+    Result updateTask(RsmTask rsmTask, Integer id);
+
+    Result approvalTask(Integer id, RsmTask rsmTask);
+
+    Result deleteTask(Integer id);
+
+    Result getTaskById(Integer id);
+
+    Result importTask(MultipartFile filePath);
 }

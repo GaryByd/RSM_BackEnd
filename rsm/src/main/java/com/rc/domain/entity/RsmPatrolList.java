@@ -2,11 +2,12 @@ package com.rc.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.io.Serial;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,6 +30,7 @@ import lombok.experimental.Accessors;
 @ApiModel(value="RsmPatrolList对象", description="巡查清单表")
 public class RsmPatrolList implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "清单id")
@@ -80,22 +82,22 @@ public class RsmPatrolList implements Serializable {
     @JsonProperty("del_flag")
     private Integer delFlag;
 
-    @JsonIgnore
+    
     @ApiModelProperty(value = "创建者")
     @JsonProperty("create_by")
     private String createBy;
 
-    @JsonIgnore
+    
     @ApiModelProperty(value = "创建时间")
     @JsonProperty("create_time")
     private LocalDateTime createTime;
 
-    @JsonIgnore
+    
     @ApiModelProperty(value = "更新时间")
     @JsonProperty("update_time")
     private LocalDateTime updateTime;
 
-    @JsonIgnore
+    
     @ApiModelProperty(value = "修改者")
     @JsonProperty("update_by")
     private String updateBy;

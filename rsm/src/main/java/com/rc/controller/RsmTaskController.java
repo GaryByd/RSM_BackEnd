@@ -8,11 +8,11 @@ import com.rc.service.IRsmTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.io.File;
 
 /**
  * <p>
@@ -36,5 +36,51 @@ public class RsmTaskController {
         return rsmTaskService.addTask(rsmTask);
     }
 
+    @ApiOperation("查询作业列表")
+    @GetMapping("/tasks")
+    public Result getTaskList(
+            @RequestParam("page_number") Integer pageNumber,
+            @RequestParam("page_size") Integer pageSize,
+            @RequestParam(value = "start_time",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String startTime,
+            @RequestParam(value = "end_time",required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String endTime,
+            @RequestParam(value = "approval_status",required = false) Integer status
+    ){
+        return rsmTaskService.getTaskList(pageNumber, pageSize,startTime,endTime,status);
+    }
 
+    @ApiOperation("更新作业")
+    @PutMapping("/tasks/{id}")
+    public Result updateTask(
+            @PathVariable("id") Integer id,
+            @RequestBody RsmTask rsmTask
+    ){
+        return rsmTaskService.updateTask(rsmTask,id);
+    }
+
+    @ApiOperation("审核作业")
+    @PutMapping("/tasks/{id}/review")
+    public Result approvalTask(
+            @PathVariable("id") Integer id,
+            @RequestBody RsmTask rsmTask
+    ){
+        return rsmTaskService.approvalTask(id,rsmTask);
+    }
+
+    @ApiOperation("删除作业")
+    @DeleteMapping("/tasks/{id}")
+    public Result deleteTask(@PathVariable("id") Integer id){
+        return rsmTaskService.deleteTask(id);
+    }
+
+    @ApiOperation("查询单个作业")
+    @GetMapping("/tasks/{id}")
+    public Result getTaskById(@PathVariable("id") Integer id){
+        return rsmTaskService.getTaskById(id);
+    }
+
+    @ApiOperation("Excel批量导入作业")
+    @PostMapping("/task/import")
+    public Result importTask(@RequestParam("file") MultipartFile file){
+        return rsmTaskService.importTask(file);
+    }
 }

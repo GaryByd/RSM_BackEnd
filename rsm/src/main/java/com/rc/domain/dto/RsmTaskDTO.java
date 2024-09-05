@@ -1,12 +1,13 @@
-package com.rc.domain.entity;
-
-import com.baomidou.mybatisplus.annotation.TableName;
+package com.rc.domain.dto;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.io.Serial;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,10 +26,10 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("rsm_task")
-@ApiModel(value="RsmTask对象", description="作业表")
-public class RsmTask implements Serializable {
+@ApiModel(value="RsmTask对象", description="作业表的完全体用于给更新作业接口返回数据")
+public class RsmTaskDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "作业id")
@@ -72,7 +73,7 @@ public class RsmTask implements Serializable {
 
     @ApiModelProperty(value = "审核状态（1通过 0未审核 2未通过）")
     @JsonProperty("approval_status")
-    private Integer approvalStatus;
+    private String approvalStatus;
 
     @ApiModelProperty(value = "审核人姓名")
     @JsonProperty("reviewer")
@@ -87,6 +88,7 @@ public class RsmTask implements Serializable {
     private String positionInfo;
 
     @ApiModelProperty(value = "创建人")
+    @JsonIgnore
     private String createBy;
 
     @ApiModelProperty(value = "备注")
@@ -94,14 +96,18 @@ public class RsmTask implements Serializable {
     private String remark;
 
     @ApiModelProperty(value = "创建时间")
+    @JsonProperty("create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改人")
+    @JsonIgnore
     private String updateBy;
 
     @ApiModelProperty(value = "修改时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonIgnore
     private LocalDateTime updateTime;
+
 
 }

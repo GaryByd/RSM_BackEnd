@@ -70,27 +70,25 @@ public class RsmPatrolPoint implements Serializable {
 
     @ApiModelProperty(value = "删除标志（0代表存在 1代表删除）")
     @JsonProperty("del_flag")
-    @JsonIgnore
+    
     private Integer delFlag;
 
     @ApiModelProperty(value = "创建者")
     @JsonProperty("create_by")
-    @JsonIgnore
     private String createBy;
 
     @ApiModelProperty(value = "创建时间")
     @JsonProperty("create_time")
-    @JsonIgnore
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "更新者")
     @JsonProperty("update_by")
-    @JsonIgnore
     private String updateBy;
+
 
     @ApiModelProperty(value = "更新时间")
     @JsonProperty("update_time")
-    @JsonIgnore
+    
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "备注信息")

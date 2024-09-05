@@ -1,11 +1,36 @@
 package com.rc.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rc.domain.dto.Result;
+import com.rc.domain.dto.RsmTaskDTO;
+import com.rc.domain.dto.TaskList;
 import com.rc.domain.entity.RsmTask;
 import com.rc.mapper.RsmTaskMapper;
 import com.rc.service.IRsmTaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.io.File;
+import static cn.hutool.poi.excel.cell.CellUtil.getCellValue;
+
 
 /**
  * <p>
@@ -18,8 +43,156 @@ import org.springframework.stereotype.Service;
 @Service
 public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> implements IRsmTaskService {
 
+    @Autowired
+    private RsmTaskMapper rsmTaskMapper;
+
     @Override
     public Result addTask(RsmTask rsmTask) {
-        return null;
+        //创建时间
+        rsmTask.setCreateTime(LocalDateTime.now());
+        rsmTask.setUpdateTime(LocalDateTime.now());
+        boolean save = this.save(rsmTask);
+        if (!save) {
+            return Result.fail("添加失败");
+        }
+        rsmTask = this.getById(rsmTask.getId());
+        return Result.ok("添加成功", rsmTask);
+    }
+
+    @Override
+    public Result getTaskList(Integer pageNumber, Integer pageSize, String startTime, String endTime, Integer status) {
+        Page<RsmTask> page = new Page<>(pageNumber, pageSize);
+
+        // 调用 Mapper 方法，执行分页查询
+        IPage<RsmTask> taskListPage = rsmTaskMapper.getTaskList(page, startTime, endTime, status);
+        TaskList taskList = new TaskList(taskListPage.getRecords(), taskListPage.getTotal());
+        // 将结果封装到 Result 对象中返回
+        return Result.ok("获取成功", taskList);
+
+    }
+
+    @Override
+    public Result updateTask(RsmTask rsmTask, Integer id) {
+        rsmTask.setUpdateTime(LocalDateTime.now());
+        int updated = rsmTaskMapper.updateTask(rsmTask, id);
+        if (updated == 0) {
+            return Result.fail("修改失败");
+        }
+        rsmTask = this.getById(id);
+        RsmTaskDTO rsmTaskDTO = new RsmTaskDTO();
+        BeanUtils.copyProperties(rsmTask, rsmTaskDTO);
+        return Result.ok("修改成功", rsmTaskDTO);
+    }
+
+
+    @Override
+    public Result approvalTask(Integer id, RsmTask rsmTaskForm) {
+        RsmTask rsmTask = this.getById(id);
+        if (rsmTask == null) {
+            return Result.fail("未找到该作业");
+        }
+        //修改这个作业的remark 和 status
+        rsmTask.setApprovalStatus(rsmTaskForm.getApprovalStatus());
+        rsmTask.setRemark(rsmTaskForm.getRemark());
+        //设置修改时间
+        rsmTask.setUpdateTime(LocalDateTime.now());
+        //保存
+        boolean success = this.updateById(rsmTask);
+        if (!success) {
+            return Result.fail("操作失败");
+        }
+        //操作成功
+        return Result.ok("操作成功", (Object) "审核成功");
+    }
+
+    @Override
+    public Result deleteTask(Integer id) {
+        int deleted = rsmTaskMapper.deleteById(id);
+        //判断是否删除成功
+        if (deleted < 1) {
+            return Result.fail("删除失败或没有该条数据");
+        }
+        //删除成功
+        return Result.ok("操作成功", (Object) "删除成功");
+    }
+
+    @Override
+    public Result getTaskById(Integer id) {
+        RsmTask rsmTask = this.getById(id);
+        if (rsmTask == null) {
+            return Result.fail("未找到该作业");
+        }
+        return Result.ok("获取成功", rsmTask);
+    }
+
+    @Override
+    public Result importTask(MultipartFile file) {
+        List<RsmTask> taskList = new ArrayList<>();
+        try (InputStream is = file.getInputStream(); Workbook workbook = new XSSFWorkbook(is)) {
+            Sheet sheet = workbook.getSheetAt(0);
+            int rows = sheet.getPhysicalNumberOfRows();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            for (int i = 1; i < rows; i++) {  // 从第2行开始，跳过标题行
+                Row row = sheet.getRow(i);
+                if (row == null) {
+                    continue;
+                }
+
+                RsmTask task = new RsmTask();
+                task.setId((long) row.getCell(0).getNumericCellValue());  // id
+                task.setTaskName((String) getCellValue(row.getCell(1)));   // task_name
+                task.setTypeName((String) getCellValue(row.getCell(2)));   // type_name
+                task.setDeptId((long) row.getCell(3).getNumericCellValue()); // dept_id
+                task.setDeptName((String) getCellValue(row.getCell(4)));   // dept_name
+                task.setStartTime(LocalDateTime.parse((CharSequence) getCellValue(row.getCell(5)), formatter)); // start_time
+                task.setEndTime(LocalDateTime.parse((CharSequence) getCellValue(row.getCell(6)), formatter));   // end_time
+                task.setRiskId((long) row.getCell(7).getNumericCellValue()); // risk_id
+                task.setMandateHolder((String) getCellValue(row.getCell(8))); // mandate_holder
+                task.setApprovalStatus((int) row.getCell(9).getNumericCellValue()); // approval_status
+                task.setReviewer((String) getCellValue(row.getCell(10)));  // reviewer
+                task.setTaskDesc((String) getCellValue(row.getCell(11)));  // task_desc
+                task.setPositionInfo((String) getCellValue(row.getCell(12))); // position_info
+                task.setCreateBy((String) getCellValue(row.getCell(13))); // create_by
+                task.setRemark((String) getCellValue(row.getCell(14)));    // remark
+
+                // 设置创建时间和修改时间为当前时间(如果表里面没有时间)
+                if (row.getCell(15) == null || StringUtils.isBlank((String) getCellValue(row.getCell(15)))) {
+                    task.setCreateTime(LocalDateTime.now());
+                } else {
+                    String createTimeStr = (String) getCellValue(row.getCell(15));
+                    task.setCreateTime(LocalDateTime.parse(createTimeStr, formatter));
+                }
+
+                task.setUpdateBy((String) getCellValue(row.getCell(16)));
+
+                if (row.getCell(17) == null || StringUtils.isBlank((String) getCellValue(row.getCell(17)))) {
+                    task.setUpdateTime(LocalDateTime.now());
+                } else {
+                    String updateTimeStr = (String) getCellValue(row.getCell(17));
+                    task.setUpdateTime(LocalDateTime.parse(updateTimeStr, formatter));
+                }
+
+
+
+                taskList.add(task);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.ok("文件读取失败");
+        }
+
+        if (!taskList.isEmpty()) {
+            // 使用批量插入
+            int batchSize = 500;
+            for (int i = 0; i < taskList.size(); i += batchSize) {
+                int end = Math.min(i + batchSize, taskList.size());
+                List<RsmTask> batchList = taskList.subList(i, end);
+                rsmTaskMapper.insertBatch(batchList);
+            }
+            return Result.ok("操作成功", (Object) ("导入成功，共导入 " + taskList.size() + " 条数据"));
+        } else {
+            return Result.fail("没有有效数据");
+        }
     }
 }

@@ -56,8 +56,8 @@ public class UserController {
       * @param  ，包含手机号、验证码；或者手机号、密码
      *
      */
-    @ApiOperation(value = "验证验证码")
-    @PostMapping("/bindEmloyeeAccount")
+    @ApiOperation(value = "绑定员工账号并登入")
+    @PostMapping("/bindEmployeeAccount")
     public Result bandWithPasswd(@RequestBody LoginFormDTO loginForm, HttpSession session){
         //实现登入功能
         return userService.bandWithPasswd(loginForm,session);
