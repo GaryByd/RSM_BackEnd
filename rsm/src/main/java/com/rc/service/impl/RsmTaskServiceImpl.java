@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rc.domain.dto.Result;
 import com.rc.domain.dto.RsmTaskDTO;
 import com.rc.domain.dto.TaskList;
+import com.rc.domain.dto.UserDTO;
 import com.rc.domain.entity.RsmTask;
 import com.rc.mapper.RsmTaskMapper;
 import com.rc.service.IRsmTaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rc.utils.UserHolder;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -48,9 +50,14 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
 
     @Override
     public Result addTask(RsmTask rsmTask) {
+        UserDTO user = UserHolder.getUser();
         //创建时间
         rsmTask.setCreateTime(LocalDateTime.now());
         rsmTask.setUpdateTime(LocalDateTime.now());
+        rsmTask.setCreateBy(user.getNickName());
+        rsmTask.setUpdateBy(user.getNickName());
+
+
         boolean save = this.save(rsmTask);
         if (!save) {
             return Result.fail("添加失败");
@@ -73,6 +80,8 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
 
     @Override
     public Result updateTask(RsmTask rsmTask, Integer id) {
+        UserDTO user = UserHolder.getUser();
+        rsmTask.setUpdateBy(user.getNickName());
         rsmTask.setUpdateTime(LocalDateTime.now());
         int updated = rsmTaskMapper.updateTask(rsmTask, id);
         if (updated == 0) {
