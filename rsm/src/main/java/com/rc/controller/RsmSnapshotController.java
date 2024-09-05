@@ -1,9 +1,12 @@
 package com.rc.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.rc.domain.entity.RsmSnapshot;
+import com.rc.service.IRsmSnapshotService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -14,7 +17,47 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-09-03
  */
 @RestController
-@RequestMapping("/rsm-snapshot")
+@RequestMapping("/api/mp")
 public class RsmSnapshotController {
+    @Autowired
+    private IRsmSnapshotService rsmSnapshotService;
+
+
+    //分页查询
+    @ApiOperation(value = "获取随手拍列表")
+    @RequestMapping("/snapshots")
+    public Object getSnapshotList(
+            @RequestParam("page_number") Integer pageNumber,
+            @RequestParam("page_size") Integer pageSize,
+            @RequestParam(value = "property",required = false) String property,
+            @RequestParam(value = "status",required = false) Integer status
+
+
+    ){
+        return rsmSnapshotService.getSnapshotList(pageNumber, pageSize,property,status);
+    }
+
+    @ApiOperation(value = "获取单个随手拍")
+    @RequestMapping("/snapshots/{id}")
+    public Object getSnapshotById(@PathVariable("id") Long id){
+        return rsmSnapshotService.getSnapshotById(id);
+    }
+
+    @ApiOperation(value = "添加随手拍")
+    @PostMapping("/snapshots")
+    public Object addSnapshot(
+            @RequestBody RsmSnapshot rsmSnapshot
+    ){
+        return rsmSnapshotService.addSnapshot(rsmSnapshot);
+    }
+
+    @ApiOperation(value = "处理随手拍")
+    @PutMapping("/snapshots/{id}/handel")
+    public Object doneSnapshot(
+            @PathVariable("id") Long id,
+            @RequestBody RsmSnapshot rsmSnapshot
+    ){
+        return rsmSnapshotService.doneSnapshot(id,rsmSnapshot);
+    }
 
 }

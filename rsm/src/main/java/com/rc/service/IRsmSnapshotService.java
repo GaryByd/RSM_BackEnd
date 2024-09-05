@@ -1,5 +1,6 @@
 package com.rc.service;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmSnapshot;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmSnapshotService extends IService<RsmSnapshot> {
 
+    Result getSnapshotList(Integer pageNumber, Integer pageSize, String property, Integer status);
+
+    Result getSnapshotById(Long id);
+
+    Object addSnapshot(RsmSnapshot rsmSnapshot);
+
+    Object doneSnapshot(Long id, RsmSnapshot rsmSnapshot);
 }

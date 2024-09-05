@@ -1,5 +1,7 @@
 package com.rc.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rc.domain.entity.RsmSnapshot;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RsmSnapshotMapper extends BaseMapper<RsmSnapshot> {
 
+    IPage<RsmSnapshot> getSnapShotList(Page<RsmSnapshot> page, String property, Integer status, Integer status1);
+
+    int handelSnapshot(RsmSnapshot rsmSnapshot);
 }
