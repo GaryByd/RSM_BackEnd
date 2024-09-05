@@ -1,5 +1,6 @@
 package com.rc.service;
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmHiddenTrouble;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmHiddenTroubleService extends IService<RsmHiddenTrouble> {
 
+    Result getHiddenTroubleList(Integer pageNumber, Integer pageSize, Integer status, String troubleClassify, String source);
+
+    Result getHiddenTroubleById(Long id);
+
+    Result addHiddenTrouble(RsmHiddenTrouble hiddenTrouble);
+
+    Result handleHiddenTrouble(Long id, RsmHiddenTrouble hiddenTrouble);
 }

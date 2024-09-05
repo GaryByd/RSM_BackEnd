@@ -1,6 +1,7 @@
 package com.rc.controller;
 
 
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmSnapshot;
 import com.rc.service.IRsmSnapshotService;
 import io.swagger.annotations.ApiOperation;
@@ -45,7 +46,7 @@ public class RsmSnapshotController {
 
     @ApiOperation(value = "添加随手拍")
     @PostMapping("/snapshots")
-    public Object addSnapshot(
+    public Result addSnapshot(
             @RequestBody RsmSnapshot rsmSnapshot
     ){
         return rsmSnapshotService.addSnapshot(rsmSnapshot);

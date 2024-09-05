@@ -1,5 +1,7 @@
 package com.rc.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rc.domain.entity.RsmHiddenTrouble;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RsmHiddenTroubleMapper extends BaseMapper<RsmHiddenTrouble> {
 
+    IPage<RsmHiddenTrouble> getHiddenTroubleList(Page<RsmHiddenTrouble> page, Integer status, String troubleClassify, String source);
+
+    boolean updateHiddenById(RsmHiddenTrouble hiddenTrouble);
 }

@@ -15,10 +15,6 @@ public class Result {
     private Object data;
     private Long total;
 
-
-
-
-
     //简单的成功 操作成功返回
     public static Result ok(){
         return new Result(200, "操作成功", null, null);

@@ -18,7 +18,7 @@ public interface IRsmSnapshotService extends IService<RsmSnapshot> {
 
     Result getSnapshotById(Long id);
 
-    Object addSnapshot(RsmSnapshot rsmSnapshot);
+    Result addSnapshot(RsmSnapshot rsmSnapshot);
 
-    Object doneSnapshot(Long id, RsmSnapshot rsmSnapshot);
+    Result doneSnapshot(Long id, RsmSnapshot rsmSnapshot);
 }
