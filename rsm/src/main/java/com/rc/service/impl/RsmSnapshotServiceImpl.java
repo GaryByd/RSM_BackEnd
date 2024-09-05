@@ -74,18 +74,18 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
 
     @Override
     public Object doneSnapshot(Long id, RsmSnapshot rsmSnapshot) {
-//        UserDTO user = UserHolder.getUser();
-//        Long userId = user.getId();
-        Long userId = 2L;
+        UserDTO user = UserHolder.getUser();
+        Long userId = user.getId();
+//        Long userId = 2L;
         //更新时间
         rsmSnapshot.setHandlerTime(LocalDateTime.now());
         rsmSnapshot.setHandlerId(userId);
         rsmSnapshot.setId(id);
         int updated = rsmSnapshotMapper.handelSnapshot(rsmSnapshot);
         if (updated<=0) {
-            return Result.fail("添加失败");
+            return Result.fail("修改失败");
         }
-        return Result.ok("添加成功",rsmSnapshotMapper.selectById(id));
+        return Result.ok("修改成功",rsmSnapshotMapper.selectById(id));
     }
 
 }
