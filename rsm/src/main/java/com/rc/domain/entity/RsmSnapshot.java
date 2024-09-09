@@ -43,33 +43,17 @@ public class RsmSnapshot implements Serializable {
     @JsonProperty("question_desc")
     private String questionDesc;
 
-    @ApiModelProperty(value = "上传人用户名")
-    @JsonProperty("creator_name")
-    private String creatorName;
-
     @ApiModelProperty(value = "上传人id")
     @JsonProperty("creator_id")
     private Long creatorId;
-
-    @ApiModelProperty(value = "联系方式")
-    @JsonProperty("phone")
-    private String phone;
 
     @ApiModelProperty(value = "图片路径")
     @JsonProperty("img_path")
     private String imgPath;
 
-    @ApiModelProperty(value = "处理状态 0-未处理 1-处理完成")
-    @JsonProperty("status")
-    private Integer status;
-
     @ApiModelProperty(value = "处理人")
     @JsonProperty("handler_id")
     private Long handlerId;
-
-    @ApiModelProperty(value = "处理完成的现场的图片路径")
-    @JsonProperty("handler_img_path")
-    private String handlerImgPath;
 
     @ApiModelProperty(value = "审批回复")
     @JsonProperty("approval_reply")

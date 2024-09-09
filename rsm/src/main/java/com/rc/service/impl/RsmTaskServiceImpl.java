@@ -152,33 +152,32 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
                 task.setId((long) row.getCell(0).getNumericCellValue());  // id
                 task.setTaskName((String) getCellValue(row.getCell(1)));   // task_name
                 task.setTypeName((String) getCellValue(row.getCell(2)));   // type_name
-                task.setDeptId((long) row.getCell(3).getNumericCellValue()); // dept_id
-                task.setDeptName((String) getCellValue(row.getCell(4)));   // dept_name
-                task.setStartTime(LocalDateTime.parse((CharSequence) getCellValue(row.getCell(5)), formatter)); // start_time
-                task.setEndTime(LocalDateTime.parse((CharSequence) getCellValue(row.getCell(6)), formatter));   // end_time
-                task.setRiskId((long) row.getCell(7).getNumericCellValue()); // risk_id
-                task.setMandateHolder((String) getCellValue(row.getCell(8))); // mandate_holder
-                task.setApprovalStatus((int) row.getCell(9).getNumericCellValue()); // approval_status
-                task.setReviewer((String) getCellValue(row.getCell(10)));  // reviewer
-                task.setTaskDesc((String) getCellValue(row.getCell(11)));  // task_desc
-                task.setPositionInfo((String) getCellValue(row.getCell(12))); // position_info
-                task.setCreateBy((String) getCellValue(row.getCell(13))); // create_by
-                task.setRemark((String) getCellValue(row.getCell(14)));    // remark
+                task.setDeptName((String) getCellValue(row.getCell(3)));   // dept_name
+                task.setStartTime(LocalDateTime.parse((CharSequence) getCellValue(row.getCell(4)), formatter)); // start_time
+                task.setEndTime(LocalDateTime.parse((CharSequence) getCellValue(row.getCell(5)), formatter));   // end_time
+                task.setRiskId((long) row.getCell(6).getNumericCellValue()); // risk_id
+                task.setMandateHolder((String) getCellValue(row.getCell(7))); // mandate_holder
+                task.setApprovalStatus((int) row.getCell(8).getNumericCellValue()); // approval_status
+                task.setReviewer((String) getCellValue(row.getCell(9)));  // reviewer
+                task.setTaskDesc((String) getCellValue(row.getCell(10)));  // task_desc
+                task.setPositionInfo((String) getCellValue(row.getCell(11))); // position_info
+                task.setCreateBy((String) getCellValue(row.getCell(12))); // create_by
+                task.setRemark((String) getCellValue(row.getCell(13)));    // remark
 
                 // 设置创建时间和修改时间为当前时间(如果表里面没有时间)
-                if (row.getCell(15) == null || StringUtils.isBlank((String) getCellValue(row.getCell(15)))) {
+                if (row.getCell(14) == null || StringUtils.isBlank((String) getCellValue(row.getCell(14)))) {
                     task.setCreateTime(LocalDateTime.now());
                 } else {
-                    String createTimeStr = (String) getCellValue(row.getCell(15));
+                    String createTimeStr = (String) getCellValue(row.getCell(14));
                     task.setCreateTime(LocalDateTime.parse(createTimeStr, formatter));
                 }
 
-                task.setUpdateBy((String) getCellValue(row.getCell(16)));
+                task.setUpdateBy((String) getCellValue(row.getCell(15)));
 
-                if (row.getCell(17) == null || StringUtils.isBlank((String) getCellValue(row.getCell(17)))) {
+                if (row.getCell(15) == null || StringUtils.isBlank((String) getCellValue(row.getCell(15)))) {
                     task.setUpdateTime(LocalDateTime.now());
                 } else {
-                    String updateTimeStr = (String) getCellValue(row.getCell(17));
+                    String updateTimeStr = (String) getCellValue(row.getCell(16));
                     task.setUpdateTime(LocalDateTime.parse(updateTimeStr, formatter));
                 }
 

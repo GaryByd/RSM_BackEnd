@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rc.mapper.RsmUserMapper">
-
+<mapper namespace="com.rc.mapper.UserMapper">
+    <update id="updateUser">
+        update sys_user
+        <set>
+            <if test="user.nickName != null">
+                nick_name = #{user.nickName},
+            </if>
+            <if test="user.icon != null">
+                avatar = #{user.icon},
+            </if>
+            <if test="user.phone != null">
+                phonenumber = #{user.phone},
+            </if>
+        </set>
+        where user_id = #{userId} <!-- 确保你有一个条件来标识要更新的记录 -->
+    </update>
 </mapper>

@@ -31,7 +31,7 @@ public class RsmRisk implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "风险id")
-    @TableId(value = "id", type = IdType.ASSIGN_UUID)
+    @TableId(value = "id", type = IdType.AUTO)
     @JsonProperty("id")
     private Long id;
 

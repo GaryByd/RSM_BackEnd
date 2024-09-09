@@ -17,14 +17,14 @@ public class MvcConfig implements WebMvcConfigurer {
     private StringRedisTemplate stringRedisTemplate;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //登入拦截器
+//        登入拦截器
         WebMvcConfigurer.super.addInterceptors(registry);
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/api/mp/login/weixin",
                         "/api/mp/login/exit",
-                        "/api/mp/bindEmloyeeAccount"
+                        "/api/mp/bindEmployeeAccount"
                 ).order(1);
         //token刷新拦截器
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate))

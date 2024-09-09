@@ -44,10 +44,6 @@ public class RsmTask implements Serializable {
     @JsonProperty("type_name")
     private String typeName;
 
-    @ApiModelProperty(value = "作业班组id")
-    @JsonProperty("dept_id")
-    private Long deptId;
-
     @ApiModelProperty(value = "班组名称")
     @JsonProperty("dept_name")
     private String deptName;

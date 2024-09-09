@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Value;
 
+
 public class WeiChatUtil {
     private static final String appid = "wx49b29dd4bcd70d0b";
 
@@ -16,6 +17,7 @@ public class WeiChatUtil {
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code";
         String replaceUrl = url.replace("{0}", appid).replace("{1}", secret).replace("{2}", code);
+        System.out.println(("发送链接为：" + replaceUrl));
         String res = HttpUtil.get(replaceUrl);
         System.out.println("发送链接后获得的数据"+res);
 

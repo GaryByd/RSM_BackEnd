@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rc.mapper.RsmTaskMapper">
     <insert id="insertBatch" parameterType="java.util.List">
-        INSERT INTO rsm_task (task_name, type_name, dept_id, dept_name, start_time, end_time, risk_id, mandate_holder, approval_status, reviewer, task_desc, position_info, remark, create_by, create_time, update_by, update_time)
+        INSERT INTO rsm_task (task_name, type_name, dept_name, start_time, end_time, risk_id, mandate_holder, approval_status, reviewer, task_desc, position_info, remark, create_by, create_time, update_by, update_time)
         VALUES
         <foreach collection="list" item="task" separator=",">
-            (#{task.taskName}, #{task.typeName}, #{task.deptId}, #{task.deptName}, #{task.startTime}, #{task.endTime}, #{task.riskId}, #{task.mandateHolder}, #{task.approvalStatus}, #{task.reviewer}, #{task.taskDesc}, #{task.positionInfo}, #{task.remark}, #{task.createBy}, #{task.createTime}, #{task.updateBy}, #{task.updateTime})
+            (#{task.taskName}, #{task.typeName}, #{task.deptName}, #{task.startTime}, #{task.endTime}, #{task.riskId}, #{task.mandateHolder}, #{task.approvalStatus}, #{task.reviewer}, #{task.taskDesc}, #{task.positionInfo}, #{task.remark}, #{task.createBy}, #{task.createTime}, #{task.updateBy}, #{task.updateTime})
         </foreach>
     </insert>
 
@@ -35,9 +35,6 @@
             </if>
             <if test="rsmTask.remark != null">
                 remark = #{rsmTask.remark},
-            </if>
-            <if test="rsmTask.deptId != null">
-                dept_id = #{rsmTask.deptId},
             </if>
             <if test="rsmTask.deptName != null">
                 dept_name = #{rsmTask.deptName},

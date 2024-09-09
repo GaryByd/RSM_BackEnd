@@ -70,7 +70,6 @@ public class RsmPatrolPoint implements Serializable {
 
     @ApiModelProperty(value = "删除标志（0代表存在 1代表删除）")
     @JsonProperty("del_flag")
-    
     private Integer delFlag;
 
     @ApiModelProperty(value = "创建者")

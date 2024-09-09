@@ -17,5 +17,5 @@ public interface RsmSnapshotMapper extends BaseMapper<RsmSnapshot> {
 
     IPage<RsmSnapshot> getSnapShotList(Page<RsmSnapshot> page, String property, Integer status, Integer status1);
 
-    int handelSnapshot(RsmSnapshot rsmSnapshot);
+    int handelSnapshot(RsmSnapshot rsmSnapshot, Long id);
 }

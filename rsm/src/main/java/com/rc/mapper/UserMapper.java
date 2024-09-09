@@ -3,7 +3,6 @@ package com.rc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rc.domain.entity.User;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -16,4 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 public interface UserMapper extends BaseMapper<User> {
 
+    boolean updateUser(User user, long userId);
 }

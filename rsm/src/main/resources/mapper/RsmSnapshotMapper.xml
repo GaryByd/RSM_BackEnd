@@ -4,26 +4,17 @@
     <update id="handelSnapshot">
         update rsm_snapshot
         <set>
-            <if test="handlerImgPath != null">
-                handler_img_path = #{handlerImgPath},
+            <if test="rsmSnapshot.property != null">
+                property = #{rsmSnapshot.property},
             </if>
-            <if test="property != null">
-                property = #{property},
+            <if test="rsmSnapshot.approvalReply != null">
+                approval_reply = #{rsmSnapshot.approvalReply},
             </if>
-            <if test="approvalReply != null">
-                approval_reply = #{approvalReply},
+            <if test="rsmSnapshot.handlerId != null">
+                handler_id = #{rsmSnapshot.handlerId},
             </if>
-            <if test="remark != null">
-                remark = #{remark},
-            </if>
-            <if test="status != null">
-                status = #{status},
-            </if>
-            <if test="handlerId != null">
-                handler_id = #{handlerId},
-            </if>
-            <if test="handlerTime != null">
-                handler_time = #{handlerTime},
+            <if test="rsmSnapshot.handlerTime != null">
+                handler_time = #{rsmSnapshot.handlerTime},
             </if>
         </set>
         where id = #{id}

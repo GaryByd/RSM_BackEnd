@@ -1,9 +1,11 @@
 package com.rc.domain.entity;
 
+import com.alibaba.druid.support.http.util.IPAddress;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("rsm_user")
+@TableName("sys_user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,13 +36,14 @@ public class User implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "user_id", type = IdType.AUTO)
     private Long id;
 
     /**
      * 手机号码
      */
-    @TableField("phone")
+    @TableField("phonenumber")
+    @JsonProperty("phone_number")
     private String phone;
 
     /**
@@ -51,12 +54,15 @@ public class User implements Serializable {
     /**
      * 昵称，默认是随机字符
      */
+    @TableField("nick_name")
+    @JsonProperty("nickname")
     private String nickName;
 
     /**
      * 用户头像
      */
     @TableField("avatar")
+    @JsonProperty("avatar")
     private String icon = "";
 
     /**
@@ -69,5 +75,12 @@ public class User implements Serializable {
      */
     private LocalDateTime updateTime;
 
+    @TableField("login_date")
+    private LocalDateTime loginDate;
+
+    @TableField("login_ip")
+    private IPAddress loginIp;
+
+    @TableField("open_id")
     private String openid;
 }

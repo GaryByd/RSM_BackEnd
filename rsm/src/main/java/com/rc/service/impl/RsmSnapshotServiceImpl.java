@@ -56,20 +56,15 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         Long userId = user.getId();
 //        Long userId=2L;
         rsmSnapshot.setCreatorId(userId);
-
         //更新时间
         rsmSnapshot.setCreateTime(LocalDateTime.now());
         rsmSnapshot.setUpdateTime(LocalDateTime.now());
         //名字
-//        rsmSnapshot.setCreatorName("小罗");
-        rsmSnapshot.setCreatorName(user.getNickName());
-
-
         boolean saved = this.save(rsmSnapshot);
         if (!saved) {
             return Result.fail("添加失败");
         }
-        return Result.ok("添加成功",rsmSnapshotMapper.selectById(userId));
+        return Result.ok("添加成功",rsmSnapshotMapper.selectById(rsmSnapshot.getId()));
     }
 
     @Override
@@ -80,7 +75,7 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         //更新时间
         rsmSnapshot.setHandlerTime(LocalDateTime.now());
         rsmSnapshot.setHandlerId(userId);
-        int updated = rsmSnapshotMapper.handelSnapshot(rsmSnapshot);
+        int updated = rsmSnapshotMapper.handelSnapshot(rsmSnapshot,id);
         if (updated<=0) {
             return Result.fail("修改失败");
         }

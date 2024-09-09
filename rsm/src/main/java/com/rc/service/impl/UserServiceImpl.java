@@ -4,6 +4,8 @@ package com.rc.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rc.domain.dto.LoginFormDTO;
@@ -17,11 +19,13 @@ import com.rc.utils.RegexUtils;
 import com.rc.utils.UserHolder;
 import com.rc.utils.WeiChatUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +50,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public Result sendCode(String phone, HttpSession session) {
@@ -76,19 +81,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result login(String code, HttpSession session) {
+        JSONObject jsonObject = JSONUtil.parseObj(code);
+        String replaceCode = jsonObject.getStr("code");
         // 1. 获取 openId
-        String openId = WeiChatUtil.getSessionId(code);
+        String openId = WeiChatUtil.getSessionId(replaceCode);
 //        //假设
-//        openId="owhoa7fITbB2gA1N4dxwWmjN8Xsw";
-
+        openId="owhoa7fITbB2gA1N4dxwWmjN8Xsw";
         // 2. 根据 openId 查询用户
-        User user = query().eq("openid", openId).one();
+        User user = query().eq("open_id", openId).one();
 
         // 3. 如果用户不存在，返回错误信息
         if (user == null) {
             return Result.fail(402,"未绑定员工账号");
         }
-
         // 4. 生成 token
         String token = UUID.randomUUID().toString();
 
@@ -106,7 +111,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         // 8. 在 session 中保存用户信息
         session.setAttribute("user", userDTO);
+        //将用户登入时间和登入ip更新到数据库中
+        user.setLoginDate(LocalDateTime.now());
 
+        //更进用户ip
+        updateById(user);
         // 9. 返回 token 和用户信息
         return Result.ok("操作成功", userDTO);
     }
@@ -129,12 +138,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //获取openid
         String openId = WeiChatUtil.getSessionId(weiXinCode);
 //        //这里是假设
-//        openId = "oK_8f5K8Zy2-YJ-JZ8Z2Z2Z2123Z2";
+//        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
         //如果openid为空
         if(openId==null){
             return Result.fail("错误的code_js");
         }
-        User user = query().eq("openid", openId).one();
+        User user = query().eq("open_id", openId).one();
         if(user!=null){
             return Result.fail("微信号已绑定");
         }
@@ -151,7 +160,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         newUser.setOpenid(openId);
         newUser.setPassword(Md5Util.getMD5String(password));
         newUser.setUsername(loginFormDTO.getUserName());
-
+        //更新时间和创建时间
+        newUser.setCreateTime(LocalDateTime.now());
+        newUser.setUpdateTime(LocalDateTime.now());
         newUser.setPhone(loginFormDTO.getPhone() != null ?loginFormDTO.getPhone():"");
         newUser.setNickName(USER_NICK_NAME_PREFIX+RandomUtil.randomString(10));
         save(newUser);
@@ -181,15 +192,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result userUpdateById(User user) {
+        log.info("更新用户信息:{}",user);
         UserDTO userDTO = UserHolder.getUser();
         long userId = userDTO.getId();
-//        //用来测试
-//        userId = 1012;
-        boolean success =  updateById(user);
+        user.setId(userId);
+        boolean success = userMapper.updateUser(user,userId);
         if(!success){
             return Result.fail("更新失败");
         }
-
         User newUser = getById(userId);
         userDTO = new UserDTO(newUser.getId(),newUser.getNickName(),newUser.getIcon(),newUser.getPhone(),"");
         return Result.ok("更新成功",userDTO);

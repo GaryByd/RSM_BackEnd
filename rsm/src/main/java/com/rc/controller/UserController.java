@@ -5,6 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.rc.domain.dto.LoginFormDTO;
 import com.rc.domain.dto.Result;
 import com.rc.domain.dto.UserDTO;
+import com.rc.domain.entity.RsmUser;
 import com.rc.domain.entity.User;
 import com.rc.service.IUserService;
 import com.rc.utils.UserHolder;

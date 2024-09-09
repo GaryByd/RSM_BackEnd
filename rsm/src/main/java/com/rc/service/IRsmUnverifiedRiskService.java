@@ -1,5 +1,7 @@
 package com.rc.service;
 
+import com.rc.domain.dto.ItemsFormDTO;
+import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmUnverifiedRisk;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmUnverifiedRiskService extends IService<RsmUnverifiedRisk> {
 
+    Result getUnverifiedRiskByListId(Integer checklistId);
+
+    Result unverifiedRiskDone(ItemsFormDTO itemsFormDTO, Integer checklistId, Integer itemId);
 }

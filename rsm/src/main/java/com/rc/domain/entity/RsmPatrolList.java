@@ -43,17 +43,10 @@ public class RsmPatrolList implements Serializable {
     @JsonProperty("patrol_list_name")
     private String patrolListName;
 
-    @ApiModelProperty(value = "巡查清单描述")
-    @JsonProperty("patrol_list_desc")
-    private String patrolListDesc;
-
-    @ApiModelProperty(value = "分类 0-安全巡查 1-岗位巡查 2-位置")
-    @JsonProperty("classify")
-    private Integer classify;
-
     @ApiModelProperty(value = "负责人id")
     @JsonProperty("principal_id")
     private Long principalId;
+
 
     @ApiModelProperty(value = "开始时间")
     @JsonProperty("start_time")
@@ -73,9 +66,11 @@ public class RsmPatrolList implements Serializable {
     @JsonProperty("hidden_trouble_count")
     private Integer hiddenTroubleCount;
 
+
     @ApiModelProperty(value = "完成时间")
     @JsonProperty("finish_time")
     private LocalDateTime finishTime;
+
 
     @ApiModelProperty(value = "状态 0-未完成 1-已完成 2-已过期")
     @JsonProperty("status")
@@ -100,7 +95,6 @@ public class RsmPatrolList implements Serializable {
     @JsonProperty("update_time")
     private LocalDateTime updateTime;
 
-    
     @ApiModelProperty(value = "修改者")
     @JsonProperty("update_by")
     private String updateBy;

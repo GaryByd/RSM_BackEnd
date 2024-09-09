@@ -5,9 +5,9 @@ spring:
     name: RSM
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3307/ry-vue?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://111.230.32.147:3306/ry_vue_temp?useSSL=false&serverTimezone=UTC
     username: root
-    password: 123
+    password: 4+K/D2zvxHooBhn5begcMQz/04IpAMpq
   redis:
     host: 127.0.0.1
     port: 6379

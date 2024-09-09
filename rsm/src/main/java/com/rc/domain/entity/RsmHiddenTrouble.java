@@ -45,9 +45,6 @@ public class RsmHiddenTrouble implements Serializable {
     @JsonProperty("creator_id")
     private Long creatorId;
 
-    @ApiModelProperty(value = "创建人联系方式")
-    @JsonProperty("phone")
-    private String phone;
 
     @ApiModelProperty(value = "隐患图片路径-逗号分隔")
     @JsonProperty("trouble_img_path")
@@ -68,10 +65,6 @@ public class RsmHiddenTrouble implements Serializable {
     @ApiModelProperty(value = "隐患来源 0-巡查 1-随手拍 2-上传")
     @JsonProperty("source")
     private Integer source;
-
-    @ApiModelProperty(value = "关联id")
-    @JsonProperty("relation_id")
-    private Long relationId;
 
     @ApiModelProperty(value = "处理人id")
     @JsonProperty("handler_id")
