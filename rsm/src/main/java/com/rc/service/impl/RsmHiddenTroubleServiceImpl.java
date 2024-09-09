@@ -26,6 +26,7 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
 
     @Autowired
     private RsmHiddenTroubleMapper rsmHiddenTroubleMapper;
+
     @Override
     public Result getHiddenTroubleList(Integer pageNumber, Integer pageSize, Integer status, String troubleClassify, String source) {
         // 创建分页对象
@@ -34,6 +35,7 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
         // 调用 Mapper 方法，执行分页查询
         IPage<RsmHiddenTrouble> HiddenTroublePage = rsmHiddenTroubleMapper.getHiddenTroubleList(page, status, troubleClassify, source);
         HiddenList hidden_list = new HiddenList(HiddenTroublePage.getRecords(), HiddenTroublePage.getTotal());
+        hidden_list.setTotal((long) hidden_list.getHiddenListData().size());
         // 将结果封装到 Result 对象中返回
         return Result.ok("获取成功",hidden_list);
     }

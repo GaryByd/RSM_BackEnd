@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rc.mapper.RsmUnverifiedRiskMapper">
+
+    <update id="unverifiedRiskDone">
+        UPDATE rsm_unverified_risk
+        SET remark = #{itemsFormDTO.remark},
+            status = #{itemsFormDTO.status}
+        WHERE patrol_list_id = #{itemId}
+    </update>
+    <select id="getUnverifiedRiskByListId" resultType="com.rc.domain.entity.RsmUnverifiedRisk"
+            parameterType="java.lang.Integer">
+        SELECT *
+        FROM rsm_unverified_risk
+        WHERE patrol_list_id = #{checklistId}
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

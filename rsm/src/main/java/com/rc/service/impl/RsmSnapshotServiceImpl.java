@@ -40,6 +40,7 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         // 调用 Mapper 方法，执行分页查询
         IPage<RsmSnapshot> snapShotListPage = rsmSnapshotMapper.getSnapShotList(page, property, status, status);
         SnapShotList snapShotList = new SnapShotList (snapShotListPage.getRecords(), snapShotListPage.getTotal());
+        snapShotList.setTotal((long) snapShotList.getSnapshotListData().size());
         // 将结果封装到 Result 对象中返回
         return Result.ok("获取成功",snapShotList);
     }

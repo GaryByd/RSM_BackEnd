@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class SnapShotList {
     @JsonProperty("snapshot_list")
-    private Object snapshotListData;
+    private List<?> snapshotListData;
     private Long total;
 }

@@ -37,6 +37,7 @@ public class RsmPatrolListServiceImpl extends ServiceImpl<RsmPatrolListMapper, R
         // 调用 Mapper 方法，执行分页查询
         IPage<RsmPatrolList> patrolListPage = patrolListMapper.getPatrolList(page, startTime, endTime, status);
         CheckedList checklist_list = new CheckedList(patrolListPage.getRecords(), patrolListPage.getTotal());
+        checklist_list.setTotal((long) checklist_list.getCheckedListData().size());
         // 将结果封装到 Result 对象中返回
         return Result.ok("获取成功",checklist_list);
     }

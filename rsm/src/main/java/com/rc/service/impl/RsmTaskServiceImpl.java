@@ -73,6 +73,7 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
         // 调用 Mapper 方法，执行分页查询
         IPage<RsmTask> taskListPage = rsmTaskMapper.getTaskList(page, startTime, endTime, status);
         TaskList taskList = new TaskList(taskListPage.getRecords(), taskListPage.getTotal());
+        taskList.setTotal((long) taskList.getTaskListData().size());
         // 将结果封装到 Result 对象中返回
         return Result.ok("获取成功", taskList);
 
