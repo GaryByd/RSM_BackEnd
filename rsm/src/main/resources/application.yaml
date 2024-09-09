@@ -27,6 +27,9 @@ mybatis-plus:
 logging:
   level:
     com.hmdp: debug
+    com.baomidou.mybatisplus: debug
+    com.baomidou.mybatisplus.core: debug
+
 
 #weixin:
 #  appid: 'wx49b29dd4bcd70d0b'
