@@ -51,6 +51,7 @@ public class RsmSnapshot implements Serializable {
     @JsonProperty("img_path")
     private String imgPath;
 
+
     @ApiModelProperty(value = "处理人")
     @JsonProperty("handler_id")
     private Long handlerId;

@@ -6,7 +6,6 @@ import com.rc.domain.dto.Result;
 import com.rc.domain.dto.SnapShotList;
 import com.rc.domain.dto.UserDTO;
 import com.rc.domain.entity.RsmSnapshot;
-import com.rc.domain.entity.User;
 import com.rc.mapper.RsmSnapshotMapper;
 import com.rc.service.IRsmSnapshotService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,7 +13,6 @@ import com.rc.utils.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -33,12 +31,12 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
     @Autowired
     private  RsmSnapshotMapper rsmSnapshotMapper;
     @Override
-    public Result getSnapshotList(Integer pageNumber, Integer pageSize, String property, Integer status) {
+    public Result getSnapshotList(Integer pageNumber, Integer pageSize, Integer property) {
         // 创建分页对象
         Page<RsmSnapshot> page = new Page<>(pageNumber, pageSize);
 
         // 调用 Mapper 方法，执行分页查询
-        IPage<RsmSnapshot> snapShotListPage = rsmSnapshotMapper.getSnapShotList(page, property, status, status);
+        IPage<RsmSnapshot> snapShotListPage = rsmSnapshotMapper.getSnapShotList(page, property);
         SnapShotList snapShotList = new SnapShotList (snapShotListPage.getRecords(), snapShotListPage.getTotal());
         snapShotList.setTotal((long) snapShotList.getSnapshotListData().size());
         // 将结果封装到 Result 对象中返回

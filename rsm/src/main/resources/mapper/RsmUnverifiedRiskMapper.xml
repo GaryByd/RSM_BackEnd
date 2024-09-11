@@ -13,7 +13,7 @@
         SELECT *
         FROM rsm_unverified_risk
         WHERE patrol_list_id = #{checklistId}
-        ORDER BY create_time DESC
+        ORDER BY update_time DESC
     </select>
 
 </mapper>

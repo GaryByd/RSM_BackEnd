@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmSnapshotService extends IService<RsmSnapshot> {
 
-    Result getSnapshotList(Integer pageNumber, Integer pageSize, String property, Integer status);
+    Result getSnapshotList(Integer pageNumber, Integer pageSize, Integer property);
 
     Result getSnapshotById(Long id);
 

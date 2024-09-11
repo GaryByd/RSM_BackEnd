@@ -49,7 +49,7 @@ public class RsmHiddenTroubleController {
     }
 
     @ApiOperation("处理隐患")
-    @PutMapping("/hiddens/{id}/handel")
+    @PutMapping("/hiddens/{id}/handle")
     public Result handleHiddenTrouble(@PathVariable("id") Long id, @RequestBody RsmHiddenTrouble hiddenTrouble) {
         return rsmHiddenTroubleService.handleHiddenTrouble(id, hiddenTrouble);
     }

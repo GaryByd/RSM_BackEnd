@@ -34,7 +34,7 @@ public class Result {
 
     //登入错误
     public static Result fail(String errorMsg){
-        return new Result(401, errorMsg, null, null);
+        return new Result(500, errorMsg, null, null);
     }
 
     // 其他错误

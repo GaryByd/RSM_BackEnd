@@ -4,25 +4,26 @@
     <update id="updateHiddenById">
         update rsm_hidden_trouble
         <set>
-            <if test="status != null">
-                status = #{status},
+            <if test="hiddenTrouble.status != null">
+                status = #{hiddenTrouble.status},
             </if>
-            <if test="handleImgPath != null">
-                handle_img_path = #{handleImgPath},
+            <if test="hiddenTrouble.handleImgPath != null">
+                handle_img_path = #{hiddenTrouble.handleImgPath},
             </if>
-            <if test="handlerId != null">
-                handler_id = #{handlerId},
+            <if test="hiddenTrouble.handlerId != null">
+                handler_id = #{hiddenTrouble.handlerId},
             </if>
-            <if test="rectifyDesc != null">
-                rectify_desc = #{rectifyDesc},
+            <if test="hiddenTrouble.rectifyDesc != null">
+                rectify_desc = #{hiddenTrouble.rectifyDesc},
             </if>
-            <if test="rectifyTime != null">
-                rectify_time = #{rectifyTime},
+            <if test="hiddenTrouble.rectifyTime != null">
+                rectify_time = #{hiddenTrouble.rectifyTime},
             </if>
-            <if test="remark != null">
-                remark = #{remark},
+            <if test="hiddenTrouble.remark != null">
+                remark = #{hiddenTrouble.remark},
             </if>
         </set>
+            where id = #{id}
     </update>
 
     <select id="getHiddenTroubleList" resultType="com.rc.domain.entity.RsmHiddenTrouble">
@@ -38,6 +39,6 @@
                 and source = #{source}
             </if>
         </where>
-        ORDER BY create_time DESC
+        ORDER BY update_time DESC
     </select>
 </mapper>

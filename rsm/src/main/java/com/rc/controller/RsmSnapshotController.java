@@ -30,12 +30,11 @@ public class RsmSnapshotController {
     public Object getSnapshotList(
             @RequestParam("page_number") Integer pageNumber,
             @RequestParam("page_size") Integer pageSize,
-            @RequestParam(value = "property",required = false) String property,
-            @RequestParam(value = "status",required = false) Integer status
+            @RequestParam(value = "property",required = false) Integer property
 
 
     ){
-        return rsmSnapshotService.getSnapshotList(pageNumber, pageSize,property,status);
+        return rsmSnapshotService.getSnapshotList(pageNumber, pageSize,property);
     }
 
     @ApiOperation(value = "获取单个随手拍")
@@ -53,7 +52,7 @@ public class RsmSnapshotController {
     }
 
     @ApiOperation(value = "处理随手拍")
-    @PutMapping("/snapshots/{id}/handel")
+    @PutMapping("/snapshots/{id}/handle")
     public Object doneSnapshot(
             @PathVariable("id") Long id,
             @RequestBody RsmSnapshot rsmSnapshot

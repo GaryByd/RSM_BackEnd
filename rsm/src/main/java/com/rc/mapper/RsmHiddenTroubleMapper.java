@@ -17,5 +17,5 @@ public interface RsmHiddenTroubleMapper extends BaseMapper<RsmHiddenTrouble> {
 
     IPage<RsmHiddenTrouble> getHiddenTroubleList(Page<RsmHiddenTrouble> page, Integer status, String troubleClassify, String source);
 
-    boolean updateHiddenById(RsmHiddenTrouble hiddenTrouble);
+    boolean updateHiddenById(RsmHiddenTrouble hiddenTrouble, Long id);
 }

@@ -25,10 +25,7 @@
             <if test="property != null">
                 AND property = #{property}
             </if>
-            <if test="status != null">
-                AND status = #{status}
-            </if>
         </where>
-        ORDER BY create_time DESC
+        ORDER BY update_time DESC
     </select>
 </mapper>

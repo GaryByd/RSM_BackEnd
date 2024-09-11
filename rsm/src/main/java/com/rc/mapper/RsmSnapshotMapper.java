@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RsmSnapshotMapper extends BaseMapper<RsmSnapshot> {
 
-    IPage<RsmSnapshot> getSnapShotList(Page<RsmSnapshot> page, String property, Integer status, Integer status1);
+    IPage<RsmSnapshot> getSnapShotList(Page<RsmSnapshot> page, Integer property);
 
     int handelSnapshot(RsmSnapshot rsmSnapshot, Long id);
 }

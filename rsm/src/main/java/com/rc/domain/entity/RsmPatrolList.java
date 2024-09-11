@@ -102,4 +102,8 @@ public class RsmPatrolList implements Serializable {
     @ApiModelProperty(value = "备注信息")
     @JsonProperty("remark")
     private String remark;
+
+    @ApiModelProperty(value = "等待检查")
+    @JsonProperty("waiting_checked")
+    private Integer waitCheck;
 }
