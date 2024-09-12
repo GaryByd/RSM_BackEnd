@@ -38,7 +38,8 @@
             <if test="source != null">
                 and source = #{source}
             </if>
+                and trouble_title like concat('%',#{keyword},'%')
         </where>
-        ORDER BY create_time DESC
+        ORDER BY update_time DESC
     </select>
 </mapper>

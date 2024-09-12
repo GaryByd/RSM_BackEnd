@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRsmHiddenTroubleService extends IService<RsmHiddenTrouble> {
 
-    Result getHiddenTroubleList(Integer pageNumber, Integer pageSize, Integer status, String troubleClassify, String source);
+    Result getHiddenTroubleList(Integer pageNumber, Integer pageSize, Integer status, String troubleClassify, String source, String keyword);
 
     Result getHiddenTroubleById(Long id);
 

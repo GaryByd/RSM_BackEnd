@@ -86,8 +86,13 @@ public class UserController {
         return userService.userUpdateById(user);
     }
 
-
-
+    @ApiOperation(value = "模糊搜索用户列表")
+    @GetMapping("/users/search")
+    public Result queryUserByKeyword(
+            @RequestParam(value = "keyword",required = false) String keyword
+    ){
+        return userService.queryUserByKeyword(keyword);
+    }
 
 
 

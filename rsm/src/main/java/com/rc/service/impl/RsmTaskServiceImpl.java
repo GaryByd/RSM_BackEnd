@@ -12,7 +12,6 @@ import com.rc.mapper.RsmTaskMapper;
 import com.rc.service.IRsmTaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rc.utils.UserHolder;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -30,7 +29,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.io.File;
 import static cn.hutool.poi.excel.cell.CellUtil.getCellValue;
 
 
@@ -67,11 +65,11 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
     }
 
     @Override
-    public Result getTaskList(Integer pageNumber, Integer pageSize, String startTime, String endTime, Integer status) {
+    public Result getTaskList(Integer pageNumber, Integer pageSize, String startTime, String endTime, Integer status, String keyword) {
         Page<RsmTask> page = new Page<>(pageNumber, pageSize);
 
         // 调用 Mapper 方法，执行分页查询
-        IPage<RsmTask> taskListPage = rsmTaskMapper.getTaskList(page, startTime, endTime, status);
+        IPage<RsmTask> taskListPage = rsmTaskMapper.getTaskList(page, startTime, endTime, status,keyword);
         TaskList taskList = new TaskList(taskListPage.getRecords(), taskListPage.getTotal());
         taskList.setTotal((long) taskList.getTaskListData().size());
         // 将结果封装到 Result 对象中返回
@@ -161,7 +159,7 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
                 task.setApprovalStatus((int) row.getCell(8).getNumericCellValue()); // approval_status
                 task.setReviewer((String) getCellValue(row.getCell(9)));  // reviewer
                 task.setTaskDesc((String) getCellValue(row.getCell(10)));  // task_desc
-                task.setPositionInfo((String) getCellValue(row.getCell(11))); // position_info
+                task.setPositionInfo((Integer) getCellValue(row.getCell(11))); // position_info
                 task.setCreateBy((String) getCellValue(row.getCell(12))); // create_by
                 task.setRemark((String) getCellValue(row.getCell(13)));    // remark
 

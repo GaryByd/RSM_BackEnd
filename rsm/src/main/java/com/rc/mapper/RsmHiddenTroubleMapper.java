@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RsmHiddenTroubleMapper extends BaseMapper<RsmHiddenTrouble> {
 
-    IPage<RsmHiddenTrouble> getHiddenTroubleList(Page<RsmHiddenTrouble> page, Integer status, String troubleClassify, String source);
+    IPage<RsmHiddenTrouble> getHiddenTroubleList(Page<RsmHiddenTrouble> page, Integer status, String troubleClassify, String source, String keyword);
 
     boolean updateHiddenById(RsmHiddenTrouble hiddenTrouble, Long id);
 }

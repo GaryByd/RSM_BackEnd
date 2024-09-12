@@ -65,9 +65,12 @@
                 AND update_time &lt;= #{endTime}
             </if>
             <if test="status != null">
-                AND status = #{status}
+                AND approval_status = #{status}
+            </if>
+            <if test="keyword != null">
+                AND task_name LIKE concat('%',#{keyword},'%')
             </if>
         </where>
-    ORDER BY create_time DESC
+        ORDER BY update_time DESC
     </select>
 </mapper>

@@ -31,9 +31,10 @@ public class RsmHiddenTroubleController {
             @RequestParam("page_size") Integer pageSize,
             @RequestParam(value = "status",required = false) Integer status,
             @RequestParam(value = "trouble_classify",required = false) String troubleClassify,
-            @RequestParam(value = "source",required = false) String source
+            @RequestParam(value = "source",required = false) String source,
+            @RequestParam(value = "keyword",required = false) String keyword
     ) {
-        return rsmHiddenTroubleService.getHiddenTroubleList(pageNumber, pageSize, status, troubleClassify, source);
+        return rsmHiddenTroubleService.getHiddenTroubleList(pageNumber, pageSize, status, troubleClassify, source,keyword);
     }
 
     @ApiOperation("获取单个隐患")

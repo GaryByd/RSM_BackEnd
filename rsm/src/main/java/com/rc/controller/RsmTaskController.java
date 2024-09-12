@@ -43,9 +43,10 @@ public class RsmTaskController {
             @RequestParam("page_size") Integer pageSize,
             @RequestParam(value = "start_time",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String startTime,
             @RequestParam(value = "end_time",required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String endTime,
-            @RequestParam(value = "approval_status",required = false) Integer status
+            @RequestParam(value = "approval_status",required = false) Integer status,
+            @RequestParam(value = "keyword",required = false) String keyword
     ){
-        return rsmTaskService.getTaskList(pageNumber, pageSize,startTime,endTime,status);
+        return rsmTaskService.getTaskList(pageNumber, pageSize,startTime,endTime,status,keyword);
     }
 
     @ApiOperation("更新作业")

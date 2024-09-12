@@ -8,9 +8,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rc.domain.dto.LoginFormDTO;
-import com.rc.domain.dto.Result;
-import com.rc.domain.dto.UserDTO;
+import com.rc.domain.dto.*;
 import com.rc.domain.entity.User;
 import com.rc.mapper.UserMapper;
 import com.rc.service.IUserService;
@@ -27,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -203,6 +202,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User newUser = getById(userId);
         userDTO = new UserDTO(newUser.getId(),newUser.getNickName(),newUser.getIcon(),newUser.getPhone(),"");
         return Result.ok("更新成功",userDTO);
+    }
+
+    @Override
+    public Result queryUserByKeyword(String keyword) {
+
+        // 调用 Mapper 方法，执行分页查询
+
+        List<User> list = userMapper.getUserList(keyword);
+        UserList userList = new UserList(list, (long) list.size());
+        return Result.ok("获取成功", userList);
     }
 
 

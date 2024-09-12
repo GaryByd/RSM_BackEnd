@@ -26,6 +26,6 @@
                 AND property = #{property}
             </if>
         </where>
-        ORDER BY create_time DESC
+        ORDER BY update_time DESC
     </select>
 </mapper>

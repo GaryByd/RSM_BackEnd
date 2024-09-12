@@ -2,8 +2,6 @@ package com.rc.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rc.domain.dto.Result;
-import com.rc.domain.entity.RsmPatrolList;
 import com.rc.domain.entity.RsmTask;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -19,7 +17,7 @@ import java.util.List;
  */
 public interface RsmTaskMapper extends BaseMapper<RsmTask> {
 
-    IPage<RsmTask> getTaskList(Page<RsmTask> page, String startTime, String endTime, Integer status);
+    IPage<RsmTask> getTaskList(Page<RsmTask> page, String startTime, String endTime, Integer status, String keyword);
 
     int updateTask(RsmTask rsmTask, Integer id);
 

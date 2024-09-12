@@ -5,8 +5,6 @@ import com.rc.domain.entity.RsmTask;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-
 /**
  * <p>
  * 作业表 服务类
@@ -19,7 +17,7 @@ public interface IRsmTaskService extends IService<RsmTask> {
 
     Result addTask(RsmTask rsmTask);
 
-    Result getTaskList(Integer pageNumber, Integer pageSize, String startTime, String endTime, Integer status);
+    Result getTaskList(Integer pageNumber, Integer pageSize, String startTime, String endTime, Integer status, String keyword);
 
     Result updateTask(RsmTask rsmTask, Integer id);
 
