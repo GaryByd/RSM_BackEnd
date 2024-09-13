@@ -85,10 +85,12 @@ public class RsmHiddenTrouble implements Serializable {
 
     @ApiModelProperty(value = "创建时间")
     @JsonProperty("create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改时间")
     @JsonProperty("update_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "备注")

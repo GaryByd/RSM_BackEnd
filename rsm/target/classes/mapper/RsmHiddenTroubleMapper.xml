@@ -22,6 +22,9 @@
             <if test="hiddenTrouble.remark != null">
                 remark = #{hiddenTrouble.remark},
             </if>
+            <if test="hiddenTrouble.updateTime != null">
+                update_time = #{hiddenTrouble.updateTime},
+            </if>
         </set>
             where id = #{id}
     </update>
@@ -38,8 +41,11 @@
             <if test="source != null">
                 and source = #{source}
             </if>
+            <if test="keyword != null">
                 and trouble_title like concat('%',#{keyword},'%')
+                 or trouble_desc like concat('%',#{keyword},'%')
+            </if>
         </where>
-        ORDER BY update_time DESC
+        ORDER BY update_time
     </select>
 </mapper>

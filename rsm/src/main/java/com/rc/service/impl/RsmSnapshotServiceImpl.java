@@ -74,6 +74,7 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         //更新时间
         rsmSnapshot.setHandlerTime(LocalDateTime.now());
         rsmSnapshot.setHandlerId(userId);
+        rsmSnapshot.setUpdateTime(LocalDateTime.now());
         int updated = rsmSnapshotMapper.handelSnapshot(rsmSnapshot,id);
         if (updated<=0) {
             return Result.fail("修改失败");

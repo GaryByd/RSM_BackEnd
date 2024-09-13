@@ -13,6 +13,8 @@ public class UserDTO {
     @JsonProperty("nickname")
     private String nickName;
     private String avatar="";
+    @JsonProperty("phone_number")
     private String phone_number="";
-    private String token="";
+    @JsonProperty("role")
+    private String remark="";
 }

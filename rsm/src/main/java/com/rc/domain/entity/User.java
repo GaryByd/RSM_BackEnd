@@ -83,4 +83,7 @@ public class User implements Serializable {
 
     @TableField("open_id")
     private String openid;
+
+    @TableField("remark")
+    private String remark;
 }

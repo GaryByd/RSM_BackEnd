@@ -98,7 +98,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         // 5. 将 User 对象转换为 UserDTO
         UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
-        userDTO.setToken(token);
         // 6. 将 UserDTO 对象转换为 Map 并存储到 Redis 中
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
                 CopyOptions.create().setIgnoreNullValue(true)
@@ -116,7 +115,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //更进用户ip
         updateById(user);
         // 9. 返回 token 和用户信息
-        return Result.ok("操作成功", userDTO);
+        return Result.ok("操作成功", (Object) token);
     }
 
     @Override
@@ -185,7 +184,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(user==null){
             return Result.fail("用户不存在");
         }
-        UserDTO userDTO = new UserDTO(user.getId(),user.getNickName(),user.getIcon(),user.getPhone(),"");
+        UserDTO userDTO = new UserDTO(user.getId(),user.getNickName(),user.getIcon(),user.getPhone(),user.getRemark());
         return Result.ok("获取成功",userDTO);
     }
 
@@ -200,7 +199,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return Result.fail("更新失败");
         }
         User newUser = getById(userId);
-        userDTO = new UserDTO(newUser.getId(),newUser.getNickName(),newUser.getIcon(),newUser.getPhone(),"");
+        userDTO = new UserDTO(newUser.getId(),newUser.getNickName(),newUser.getIcon(),newUser.getPhone(),newUser.getIcon());
         return Result.ok("更新成功",userDTO);
     }
 
@@ -209,8 +208,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         // 调用 Mapper 方法，执行分页查询
 
-        List<User> list = userMapper.getUserList(keyword);
+        List<UserDTO> list = userMapper.getUserList(keyword);
         UserList userList = new UserList(list, (long) list.size());
+
         return Result.ok("获取成功", userList);
     }
 

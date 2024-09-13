@@ -16,7 +16,7 @@
         </set>
         where user_id = #{userId} <!-- 确保你有一个条件来标识要更新的记录 -->
     </update>
-    <select id="getUserList" resultType="com.rc.domain.entity.User">
+    <select id="getUserList" resultType="com.rc.domain.dto.UserDTO">
         SELECT *
         FROM sys_user
         <where>

@@ -3,6 +3,7 @@ package com.rc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.rc.domain.dto.UserDTO;
 import com.rc.domain.entity.RsmTask;
 import com.rc.domain.entity.User;
 
@@ -22,5 +23,5 @@ public interface UserMapper extends BaseMapper<User> {
     boolean updateUser(User user, long userId);
 
 
-    List<User> getUserList(String keyword);
+    List<UserDTO> getUserList(String keyword);
 }

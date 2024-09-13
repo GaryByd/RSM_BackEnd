@@ -88,11 +88,13 @@ public class RsmPatrolList implements Serializable {
     
     @ApiModelProperty(value = "创建时间")
     @JsonProperty("create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     
     @ApiModelProperty(value = "更新时间")
     @JsonProperty("update_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "修改者")

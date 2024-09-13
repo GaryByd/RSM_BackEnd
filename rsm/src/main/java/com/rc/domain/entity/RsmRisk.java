@@ -3,6 +3,7 @@ package com.rc.domain.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
@@ -93,6 +94,7 @@ public class RsmRisk implements Serializable {
 
     @ApiModelProperty(value = "创建时间")
     @JsonIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改人")
@@ -101,5 +103,6 @@ public class RsmRisk implements Serializable {
 
     @ApiModelProperty(value = "更新时间")
     @JsonIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 }

@@ -72,6 +72,8 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
 
         hiddenTrouble.setHandlerId(userId);
         hiddenTrouble.setUpdateTime(java.time.LocalDateTime.now());
+        //上传处理时间
+        hiddenTrouble.setRectifyTime(java.time.LocalDateTime.now());
         boolean updated = rsmHiddenTroubleMapper.updateHiddenById(hiddenTrouble,id);
         if(!updated){
             return Result.fail("修改失败");

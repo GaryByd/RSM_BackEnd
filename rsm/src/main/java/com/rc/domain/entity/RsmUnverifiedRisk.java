@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
@@ -77,6 +78,7 @@ public class RsmUnverifiedRisk implements Serializable {
 
     @ApiModelProperty(value = "创建时间")
     @JsonProperty("create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改人")
@@ -85,6 +87,7 @@ public class RsmUnverifiedRisk implements Serializable {
 
     @ApiModelProperty(value = "更新时间")
     @JsonProperty("update_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
 

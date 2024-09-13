@@ -16,6 +16,12 @@
             <if test="rsmSnapshot.handlerTime != null">
                 handler_time = #{rsmSnapshot.handlerTime},
             </if>
+            <if test="rsmSnapshot.remark != null">
+                remark = #{rsmSnapshot.remark},
+            </if>
+            <if test="rsmSnapshot.handlerTime != null">
+                handler_time = #{rsmSnapshot.handlerTime},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -26,6 +32,6 @@
                 AND property = #{property}
             </if>
         </where>
-        ORDER BY update_time DESC
+        ORDER BY update_time
     </select>
 </mapper>
