@@ -22,6 +22,9 @@
             <if test="rsmSnapshot.handlerTime != null">
                 handler_time = #{rsmSnapshot.handlerTime},
             </if>
+            <if test="rsmSnapshot.updateTime != null">
+                update_time = #{rsmSnapshot.updateTime},
+            </if>
         </set>
         where id = #{id}
     </update>

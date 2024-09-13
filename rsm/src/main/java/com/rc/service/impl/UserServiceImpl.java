@@ -166,12 +166,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         save(newUser);
         //user转为UserDTO
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(newUser.getId());
+        userDTO.setUserId(newUser.getId());
         userDTO.setNickName(newUser.getNickName());
         //头像
         userDTO.setAvatar(newUser.getIcon());
         //电话号码
-        userDTO.setPhone_number(newUser.getPhone());
+        userDTO.setPhoneNumber(newUser.getPhone());
         return Result.ok("操作成功",userDTO);
 
 
@@ -192,7 +192,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Result userUpdateById(User user) {
         log.info("更新用户信息:{}",user);
         UserDTO userDTO = UserHolder.getUser();
-        long userId = userDTO.getId();
+        long userId = userDTO.getUserId();
         user.setId(userId);
         boolean success = userMapper.updateUser(user,userId);
         if(!success){

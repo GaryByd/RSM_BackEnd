@@ -68,7 +68,7 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
     @Override
     public Result handleHiddenTrouble(Long id, RsmHiddenTrouble hiddenTrouble) {
         UserDTO user = UserHolder.getUser();
-        Long userId = user.getId();
+        Long userId = user.getUserId();
 
         hiddenTrouble.setHandlerId(userId);
         hiddenTrouble.setUpdateTime(java.time.LocalDateTime.now());

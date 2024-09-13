@@ -52,7 +52,7 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
     @Override
     public Result addSnapshot(RsmSnapshot rsmSnapshot) {
         UserDTO user = UserHolder.getUser();
-        Long userId = user.getId();
+        Long userId = user.getUserId();
 //        Long userId=2L;
         rsmSnapshot.setCreatorId(userId);
         //更新时间
@@ -69,7 +69,7 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
     @Override
     public Result doneSnapshot(Long id, RsmSnapshot rsmSnapshot) {
         UserDTO user = UserHolder.getUser();
-        Long userId = user.getId();
+        Long userId = user.getUserId();
 //        Long userId = 2L;
         //更新时间
         rsmSnapshot.setHandlerTime(LocalDateTime.now());
