@@ -32,7 +32,7 @@ public class RsmTaskController {
 
     @ApiOperation("新增作业")
     @PostMapping("/task")
-    public Result getTaskList(@RequestBody RsmTask rsmTask){
+    public Result getTaskList(@RequestBody RsmTask rsmTask) {
         return rsmTaskService.addTask(rsmTask);
     }
 
@@ -41,12 +41,12 @@ public class RsmTaskController {
     public Result getTaskList(
             @RequestParam("page_number") Integer pageNumber,
             @RequestParam("page_size") Integer pageSize,
-            @RequestParam(value = "start_time",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String startTime,
-            @RequestParam(value = "end_time",required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String endTime,
-            @RequestParam(value = "approval_status",required = false) Integer status,
-            @RequestParam(value = "keyword",required = false) String keyword
-    ){
-        return rsmTaskService.getTaskList(pageNumber, pageSize,startTime,endTime,status,keyword);
+            @RequestParam(value = "start_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String startTime,
+            @RequestParam(value = "end_time", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String endTime,
+            @RequestParam(value = "approval_status", required = false) Integer status,
+            @RequestParam(value = "keyword", required = false) String keyword
+    ) {
+        return rsmTaskService.getTaskList(pageNumber, pageSize, startTime, endTime, status, keyword);
     }
 
     @ApiOperation("更新作业")
@@ -54,8 +54,8 @@ public class RsmTaskController {
     public Result updateTask(
             @PathVariable("id") Integer id,
             @RequestBody RsmTask rsmTask
-    ){
-        return rsmTaskService.updateTask(rsmTask,id);
+    ) {
+        return rsmTaskService.updateTask(rsmTask, id);
     }
 
     @ApiOperation("审核作业")
@@ -63,25 +63,26 @@ public class RsmTaskController {
     public Result approvalTask(
             @PathVariable("id") Integer id,
             @RequestBody RsmTask rsmTask
-    ){
-        return rsmTaskService.approvalTask(id,rsmTask);
+    ) {
+        return rsmTaskService.approvalTask(id, rsmTask);
     }
 
     @ApiOperation("删除作业")
     @DeleteMapping("/tasks/{id}")
-    public Result deleteTask(@PathVariable("id") Integer id){
+    public Result deleteTask(@PathVariable("id") Integer id) {
         return rsmTaskService.deleteTask(id);
     }
 
     @ApiOperation("查询单个作业")
     @GetMapping("/tasks/{id}")
-    public Result getTaskById(@PathVariable("id") Integer id){
+    public Result getTaskById(@PathVariable("id") Integer id) {
         return rsmTaskService.getTaskById(id);
     }
 
     @ApiOperation("Excel批量导入作业")
     @PostMapping("/task/import")
-    public Result importTask(@RequestParam("file") MultipartFile file){
+    public Result importTask(@RequestParam("file") MultipartFile file) {
         return rsmTaskService.importTask(file);
     }
+
 }

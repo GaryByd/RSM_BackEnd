@@ -27,4 +27,11 @@ public class RsmPatrolPointServiceImpl extends ServiceImpl<RsmPatrolPointMapper,
                 .one();
         return Result.ok("查询成功",rsmPatrolPoint);
     }
+
+    @Override
+    public Result getTaskPosition(Integer taskId, Integer positionId) {
+        RsmPatrolPoint rsmPatrolPoint = patrolPointMapper.getTaskPosition(taskId, positionId);
+        return Result.ok("操作成功",rsmPatrolPoint);
+
+    }
 }

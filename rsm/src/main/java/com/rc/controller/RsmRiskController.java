@@ -35,4 +35,14 @@ public class RsmRiskController {
     {
         return rsmRiskService.getRiskById(riskId);
     }
+
+
+    @ApiOperation(value = "根据检查项ID获取风险")
+    @RequestMapping("/risks/{risk_id}")
+    public Result getRiskList(
+            @PathVariable("risk_id") Integer riskId
+    )
+    {
+        return rsmRiskService.getRiskById(riskId);
+    }
 }

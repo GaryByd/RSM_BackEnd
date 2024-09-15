@@ -52,9 +52,9 @@ public class RsmRisk implements Serializable {
     @JsonProperty("control_standard")
     private String controlStandard;
 
-    @ApiModelProperty(value = "风险位置名")
-    @JsonProperty("position")
-    private String position;
+//    @ApiModelProperty(value = "风险位置名")
+//    @JsonProperty("position")
+//    private String position;
 
     @ApiModelProperty(value = "风险等级")
     @JsonProperty("risk_level")

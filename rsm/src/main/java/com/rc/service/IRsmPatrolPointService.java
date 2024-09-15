@@ -15,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IRsmPatrolPointService extends IService<RsmPatrolPoint> {
 
     Result getPatrolPointByListId(Integer pointId);
+
+    Result getTaskPosition(Integer taskId, Integer positionId);
 }

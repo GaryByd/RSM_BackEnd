@@ -85,7 +85,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 1. 获取 openId
         String openId = WeiChatUtil.getSessionId(replaceCode);
 //        //假设
+
         openId="owhoa7fITbB2gA1N4dxwWmjN8Xsw";
+        //如果openid没有值
+        if(openId==null){
+            return Result.fail("错误的code_js");
+        }
         // 2. 根据 openId 查询用户
         User user = query().eq("open_id", openId).one();
 
