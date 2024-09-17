@@ -41,7 +41,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         System.out.println(userMap); // 打印哈希数据
         if (userMap.isEmpty()) {
             // 放行，无效token
-            filterChain.doFilter(request, response);
             return;
         }
 
@@ -55,7 +54,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         UserHolder.saveUser(userDTO);
         // 刷新token有效期
         stringRedisTemplate.expire(key, LOGIN_USER_TTL, TimeUnit.MINUTES);
-        System.out.println(loginUser.getAuthorities()+"===================");
+        System.out.println("Auth:"+loginUser.getAuthorities());
         // 设置用户信息到 SecurityContextHolder
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());

@@ -109,7 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //UUID token
         String tokenId = JwtUtil.getUUID();
         //8.认证通过生成token
-        String token = JwtUtil.createJWT(tokenId, String.valueOf(userId),36000L);
+        String token = JwtUtil.createJWT(tokenId, String.valueOf(userId),2592000000L);
 
         // 10. 将 UserDTO 对象转换为 Map 并存储到 Redis 中
         Map<String, Object> userMap = BeanUtil.beanToMap(loginUser, new HashMap<>(),

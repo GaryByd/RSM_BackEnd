@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 配置路径的授权规则
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/mp/login/weixin", "/api/mp/login/exit", "/api/mp/bindEmployeeAccount")
+                        .requestMatchers("/api/mp/login/weixin", "/api/mp/bindEmployeeAccount")
                         .anonymous()
                         .anyRequest()
                         .authenticated())

@@ -24,11 +24,16 @@ public class UserDTO {
     @JsonProperty("role")
     private String remark="";
     public static UserDTO parse(String str) {
-        // 定义正则表达式
+        // 如果输入字符串为空或为 null，直接返回 null 或者空的 UserDTO 对象
+        if (str == null || str.trim().isEmpty()) {
+            // 根据业务需求，选择返回 null 或一个空的 UserDTO 对象
+            return null;  // 或者返回 new UserDTO();
+        }
+
+// 定义正则表达式
         String regex = "UserDTO\\(userId=(.*?), nickName=(.*?), avatar=(.*?), phoneNumber=(.*?), remark=(.*?)\\)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
-
         if (matcher.find()) {
             // 提取字段值
             String userIdStr = matcher.group(1);
@@ -39,15 +44,22 @@ public class UserDTO {
 
             // 创建 UserDTO 实例
             UserDTO userDTO = new UserDTO();
-            userDTO.setUserId(userIdStr.equals("null") ? null : Long.parseLong(userIdStr.trim()));
-            userDTO.setNickName(nickName.trim());
-            userDTO.setAvatar(avatar.trim());
-            userDTO.setPhoneNumber(phoneNumber.trim());
-            userDTO.setRemark(remark.trim());
+
+            // 判断 userId 字段是否为 null 或空字符串
+            if (userIdStr != null && !userIdStr.trim().isEmpty() && !"null".equals(userIdStr.trim())) {
+                userDTO.setUserId(Long.parseLong(userIdStr.trim()));
+            } else {
+                userDTO.setUserId(null);
+            }
+
+            // 设置其他字段，判断为空时处理
+            userDTO.setNickName(nickName != null && !nickName.trim().isEmpty() ? nickName.trim() : null);
+            userDTO.setAvatar(avatar != null && !avatar.trim().isEmpty() ? avatar.trim() : null);
+            userDTO.setPhoneNumber(phoneNumber != null && !phoneNumber.trim().isEmpty() ? phoneNumber.trim() : null);
+            userDTO.setRemark(remark != null && !remark.trim().isEmpty() ? remark.trim() : null);
 
             return userDTO;
         }
-
         throw new IllegalArgumentException("Invalid input string");
     }
 }

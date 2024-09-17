@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.rc</groupId>
-    <artifactId>SecurityTest</artifactId>
+    <artifactId>rsm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>SecurityTest</name>
     <description>SecurityTest</description>
