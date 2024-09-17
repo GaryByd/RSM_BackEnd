@@ -6,23 +6,26 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rc.domain.dto.*;
 import com.rc.domain.entity.User;
 import com.rc.mapper.UserMapper;
 import com.rc.service.IUserService;
-import com.rc.utils.Md5Util;
-import com.rc.utils.RegexUtils;
-import com.rc.utils.UserHolder;
-import com.rc.utils.WeiChatUtil;
+import com.rc.utils.*;
+import io.jsonwebtoken.JwtBuilder;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +55,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private UserMapper userMapper;
 
+    @Resource
+    private AuthenticationManager authenticationManager;
     @Override
     public Result sendCode(String phone, HttpSession session) {
         //校验手机号
@@ -80,46 +85,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result login(String code, HttpSession session) {
-        JSONObject jsonObject = JSONUtil.parseObj(code);
-        String replaceCode = jsonObject.getStr("code");
-        // 1. 获取 openId
-        String openId = WeiChatUtil.getSessionId(replaceCode);
-//        //假设
-
-        openId="owhoa7fITbB2gA1N4dxwWmjN8Xsw";
-        //如果openid没有值
-        if(openId==null){
-            return Result.fail("错误的code_js");
+        // 1. 使用 code 通过 WeiChatUtil 获取 openId
+        String openId = WeiChatUtil.getSessionId(code);
+        //假设openid
+        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
+        // 2. 检查 openId 是否有效
+        if (openId == null || openId.isEmpty()) {
+            return Result.fail(401, "无效的微信code，无法获取openId");
         }
-        // 2. 根据 openId 查询用户
-        User user = query().eq("open_id", openId).one();
 
-        // 3. 如果用户不存在，返回错误信息
-        if (user == null) {
-            return Result.fail(402,"未绑定员工账号");
-        }
-        // 4. 生成 token
-        String token = UUID.randomUUID().toString();
+        // 5. 使用 openId 封装 Authentication 对象（不需要密码）
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(openId, null, null);
 
-        // 5. 将 User 对象转换为 UserDTO
-        UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
-        // 6. 将 UserDTO 对象转换为 Map 并存储到 Redis 中
-        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+        // 6. 通过 AuthenticationManager 的 authenticate 方法进行用户认证
+        Authentication authenticated = authenticationManager.authenticate(authenticationToken);
+
+        // 7. 在 Authentication 中获取用户信息
+        LoginUser loginUser = (LoginUser) authenticated.getPrincipal();
+
+
+        Long userId = loginUser.getUser().getUserId();
+        //UUID token
+        String tokenId = JwtUtil.getUUID();
+        //8.认证通过生成token
+        String token = JwtUtil.createJWT(tokenId, String.valueOf(userId),36000L);
+
+        // 10. 将 UserDTO 对象转换为 Map 并存储到 Redis 中
+        Map<String, Object> userMap = BeanUtil.beanToMap(loginUser, new HashMap<>(),
                 CopyOptions.create().setIgnoreNullValue(true)
                         .setFieldValueEditor((key, value) -> value != null ? value.toString() : ""));
         stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, userMap);
-
-        // 7. 设置 Redis 过期时间
+        // 11. 设置 Redis 过期时间
         stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.MINUTES);
-
-        // 8. 在 session 中保存用户信息
-        session.setAttribute("user", userDTO);
-        //将用户登入时间和登入ip更新到数据库中
-        user.setLoginDate(LocalDateTime.now());
-
-        //更进用户ip
-        updateById(user);
-        // 9. 返回 token 和用户信息
+        // 12. 在 session 中保存用户信息
+        session.setAttribute("user", loginUser.getUser());
+        // 15. 返回 token 和用户信息
         return Result.ok("操作成功", (Object) token);
     }
 

@@ -11,11 +11,13 @@ import com.rc.service.IUserService;
 import com.rc.utils.UserHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+
+
 
 /**
  * <p>
@@ -47,7 +49,7 @@ public class UserController {
 
     @ApiOperation(value = "微信一键登入")
     @PostMapping("/login/weixin")
-    public Result login(@RequestBody String code,HttpSession session){
+    public Result login(@RequestBody String code, HttpSession session){
         return userService.login(code,session);
     }
 

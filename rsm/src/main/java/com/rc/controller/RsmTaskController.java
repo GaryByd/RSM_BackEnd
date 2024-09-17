@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,8 +59,10 @@ public class RsmTaskController {
         return rsmTaskService.updateTask(rsmTask, id);
     }
 
+
     @ApiOperation("审核作业")
     @PutMapping("/tasks/{id}/review")
+    @PreAuthorize("hasAuthority('work:audit:list')")
     public Result approvalTask(
             @PathVariable("id") Integer id,
             @RequestBody RsmTask rsmTask
@@ -75,6 +78,7 @@ public class RsmTaskController {
 
     @ApiOperation("查询单个作业")
     @GetMapping("/tasks/{id}")
+    @PreAuthorize("hasAuthority('work:audit:')")
     public Result getTaskById(@PathVariable("id") Integer id) {
         return rsmTaskService.getTaskById(id);
     }

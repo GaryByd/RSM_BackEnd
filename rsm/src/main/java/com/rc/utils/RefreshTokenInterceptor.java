@@ -2,13 +2,16 @@ package com.rc.utils;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.rc.domain.dto.LoginUser;
 import com.rc.domain.dto.UserDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -35,12 +38,17 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
             return true;
         }
         //将查询到的哈希数据转换成UserDTO对象
-        UserDTO userDTO =  BeanUtil.fillBeanWithMap(userMap, new UserDTO(), false);
-
+        LoginUser loginUser =  BeanUtil.fillBeanWithMap(userMap, new LoginUser(), false);
+        UserDTO userDTO = loginUser.getUser();
         //存在，保存在ThreadLocal
         UserHolder.saveUser(userDTO);
         //刷新token有效期
         stringRedisTemplate.expire(key, LOGIN_USER_TTL, TimeUnit.MINUTES);
+        //放行前要存权限
+        //将获取到的用户信息存入SecurityContextHolder 参数（用户信息，，权限信息）
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         //放行
         return true;
     }
