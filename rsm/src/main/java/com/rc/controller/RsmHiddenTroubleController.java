@@ -55,4 +55,10 @@ public class RsmHiddenTroubleController {
         return rsmHiddenTroubleService.handleHiddenTrouble(id, hiddenTrouble);
     }
 
+    @ApiOperation("获取自己的隐患")
+    @GetMapping("/me/hiddens")
+    public Result getMyHiddenTrouble() {
+        return rsmHiddenTroubleService.getMyHiddenTrouble();
+    }
+
 }

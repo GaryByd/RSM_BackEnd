@@ -45,5 +45,11 @@ public class RsmPatrolPointController {
     {
         return patrolPointService.getTaskPosition(taskId, positionId);
     }
+    @ApiOperation(value = "获取巡查点列表")
+    @GetMapping("/positions")
+    public Result getPatrolPointList()
+    {
+        return patrolPointService.getPatrolPointList();
+    }
 
 }

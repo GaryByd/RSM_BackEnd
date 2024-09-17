@@ -108,5 +108,5 @@ public class RsmPatrolList implements Serializable {
 
     @ApiModelProperty(value = "等待检查")
     @JsonProperty("waiting_checked")
-    private Integer waitCheck;
+    private Integer waitingChecked;
 }

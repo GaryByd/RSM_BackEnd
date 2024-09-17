@@ -1,6 +1,9 @@
 package com.rc.filter;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTUtil;
+import cn.hutool.jwt.JWTValidator;
 import com.rc.domain.dto.LoginUser;
 import com.rc.domain.dto.UserDTO;
 import com.rc.utils.UserHolder;
@@ -37,6 +40,17 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         Map<Object, Object> userMap = stringRedisTemplate.opsForHash().entries(key);
         System.out.println(userMap); // 打印哈希数据
         if (userMap.isEmpty()) {
+            // 放行，无效token
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        //解析token
+        JWT jwt = JWTUtil.parseToken(token);
+        try {
+            // 验证token是否过期
+            JWTValidator.of(jwt).validateDate();
+        } catch (Exception e) {
             // 放行，无效token
             filterChain.doFilter(request, response);
             return;

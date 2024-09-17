@@ -2,11 +2,9 @@ package com.rc.service.impl;
 
 import com.rc.domain.dto.Result;
 import com.rc.domain.entity.RsmRisk;
-import com.rc.domain.entity.RsmTask;
 import com.rc.mapper.RsmRiskMapper;
 import com.rc.service.IRsmRiskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,6 +20,11 @@ public class RsmRiskServiceImpl extends ServiceImpl<RsmRiskMapper, RsmRisk> impl
     @Override
     public Result getRiskById(Integer riskId) {
         return Result.ok("操作成功",this.getById(riskId));
+    }
+
+    @Override
+    public Result getRiskList() {
+        return Result.ok("操作成功",this.list());
     }
 
 }

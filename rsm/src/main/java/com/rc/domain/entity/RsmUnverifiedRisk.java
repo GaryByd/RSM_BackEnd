@@ -37,7 +37,7 @@ public class RsmUnverifiedRisk implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "待查项名称")
-    @JsonProperty("unverified_risk_name")
+    @JsonProperty("name")
     private String unverifiedRiskName;
 
     @ApiModelProperty(value = "关联风险id")
@@ -60,9 +60,9 @@ public class RsmUnverifiedRisk implements Serializable {
     @JsonProperty("control_standard")
     private String controlStandard;
 
-    @ApiModelProperty(value = "作业位置名")
-    @JsonProperty("position")
-    private String position;
+    @ApiModelProperty(value = "巡查点id")
+    @JsonProperty("patrol_point_id")
+    private Integer position;
 
     @ApiModelProperty(value = "状态")
     @JsonProperty("status")

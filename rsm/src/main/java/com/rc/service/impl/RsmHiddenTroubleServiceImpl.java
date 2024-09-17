@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rc.domain.dto.HiddenList;
 import com.rc.domain.dto.Result;
 import com.rc.domain.dto.UserDTO;
+import com.rc.domain.dto.UserList;
 import com.rc.domain.entity.RsmHiddenTrouble;
 import com.rc.mapper.RsmHiddenTroubleMapper;
 import com.rc.service.IRsmHiddenTroubleService;
@@ -12,6 +13,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rc.utils.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -79,6 +82,15 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
             return Result.fail("修改失败");
         }
         return Result.ok("操作成功", rsmHiddenTroubleMapper.selectById(id));
+    }
+
+    @Override
+    public Result getMyHiddenTrouble() {
+        UserDTO user = UserHolder.getUser();
+        Long userId = user.getUserId();
+        List<RsmHiddenTrouble> rsmHiddenTroubleList = rsmHiddenTroubleMapper.getMyHiddenTrouble(userId);
+        UserList userList = new UserList(rsmHiddenTroubleList, (long) rsmHiddenTroubleList.size());
+        return Result.ok("操作成功", userList);
     }
 
 }

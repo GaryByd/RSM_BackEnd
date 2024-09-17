@@ -45,4 +45,11 @@ public class RsmRiskController {
     {
         return rsmRiskService.getRiskById(riskId);
     }
+
+    @ApiOperation(value = "获取风险列表")
+    @RequestMapping("/risks")
+    public Result getRiskList()
+    {
+        return rsmRiskService.getRiskList();
+    }
 }

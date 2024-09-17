@@ -21,4 +21,6 @@ public interface IRsmHiddenTroubleService extends IService<RsmHiddenTrouble> {
     Result addHiddenTrouble(RsmHiddenTrouble hiddenTrouble);
 
     Result handleHiddenTrouble(Long id, RsmHiddenTrouble hiddenTrouble);
+
+    Result getMyHiddenTrouble();
 }

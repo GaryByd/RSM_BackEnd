@@ -16,4 +16,5 @@ public interface IRsmRiskService extends IService<RsmRisk> {
 
     Result getRiskById(Integer riskId);
 
+    Result getRiskList();
 }

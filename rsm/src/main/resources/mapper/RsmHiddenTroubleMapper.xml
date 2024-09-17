@@ -48,4 +48,11 @@
         </where>
         ORDER BY update_time
     </select>
+    <select id="getMyHiddenTrouble" resultType="com.rc.domain.entity.RsmHiddenTrouble"
+            parameterType="java.lang.Long">
+        select * from rsm_hidden_trouble
+        where handler_id = #{userId}
+        ORDER BY update_time
+    </select>
+
 </mapper>

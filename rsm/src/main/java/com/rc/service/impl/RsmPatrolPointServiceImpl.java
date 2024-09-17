@@ -34,4 +34,9 @@ public class RsmPatrolPointServiceImpl extends ServiceImpl<RsmPatrolPointMapper,
         return Result.ok("操作成功",rsmPatrolPoint);
 
     }
+
+    @Override
+    public Result getPatrolPointList() {
+        return Result.ok("操作成功", patrolPointMapper.selectList(null));
+    }
 }
