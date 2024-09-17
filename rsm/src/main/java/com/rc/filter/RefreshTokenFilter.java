@@ -1,6 +1,5 @@
 package com.rc.filter;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.rc.domain.dto.LoginUser;
 import com.rc.domain.dto.UserDTO;
@@ -12,12 +11,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import static com.rc.utils.RedisConstants.LOGIN_USER_KEY;
@@ -41,6 +38,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         System.out.println(userMap); // 打印哈希数据
         if (userMap.isEmpty()) {
             // 放行，无效token
+            filterChain.doFilter(request, response);
             return;
         }
 

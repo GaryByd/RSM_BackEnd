@@ -67,8 +67,6 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint))
                 // 在认证之前执行 RefreshTokenFilter
                 .addFilterBefore(new RefreshTokenFilter(stringRedisTemplate), UsernamePasswordAuthenticationFilter.class);
-                // 在认证之后执行 LoginFilter
-
         // 构建并返回安全过滤链
         return http.build();
     }

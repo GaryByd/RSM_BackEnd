@@ -26,12 +26,10 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
         if (loginUser == null) {
             throw new RuntimeException("未找到用户");
         }
-
         System.out.println(loginUser.getAuthorities()+"========================================");
         // 返回通过认证的 Authentication 对象
         return new UsernamePasswordAuthenticationToken(
                 loginUser, null, loginUser.getAuthorities());
-
     }
 
     @Override
