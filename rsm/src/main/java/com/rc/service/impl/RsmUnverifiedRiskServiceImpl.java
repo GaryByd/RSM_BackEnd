@@ -72,7 +72,6 @@ public class RsmUnverifiedRiskServiceImpl extends ServiceImpl<RsmUnverifiedRiskM
             return Result.fail("checked_count修改失败");
         }
 
-
         //日常更新status 状态使用ItemId
         int updatedRows  = rsmUnverifiedRiskMapper.unverifiedRiskDone(itemsFormDTO, itemId);
         if(updatedRows == 0){

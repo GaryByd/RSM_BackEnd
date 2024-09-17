@@ -6,7 +6,7 @@
         UPDATE rsm_unverified_risk
         SET remark = #{itemsFormDTO.remark},
             status = #{itemsFormDTO.status}
-        WHERE patrol_list_id = #{itemId}
+        WHERE id = #{itemId}
     </update>
     <select id="getUnverifiedRiskByListId" resultType="com.rc.domain.entity.RsmUnverifiedRisk"
             parameterType="java.lang.Integer">

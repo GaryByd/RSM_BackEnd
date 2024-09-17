@@ -4,13 +4,13 @@ com\rc\domain\entity\RsmRisk.class
 com\rc\utils\SimpleRedisLock.class
 com\rc\controller\SysMenuController.class
 com\rc\utils\WeiChatUtil.class
-com\rc\controller\FileController.class
 com\rc\controller\RsmPatrolPointController.class
 com\rc\domain\dto\CheckedList.class
 com\rc\service\impl\RsmSnapshotServiceImpl.class
 com\rc\service\IRsmSnapshotService.class
 com\rc\config\WebExceptionAdvice.class
 com\rc\mapper\RsmRiskMapper.class
+com\rc\filter\RefreshTokenFilter.class
 com\rc\mapper\RsmHiddenTroubleRecordMapper.class
 com\rc\utils\RegexUtils.class
 com\rc\utils\SystemConstants.class
@@ -66,7 +66,6 @@ com\rc\mapper\RsmUnverifiedRiskMapper.class
 com\rc\service\impl\RsmTaskServiceImpl.class
 com\rc\service\impl\RsmHiddenTroubleRecordServiceImpl.class
 com\rc\service\ISysMenuService.class
-com\rc\utils\AliOssUtil.class
 com\rc\domain\entity\RsmUser.class
 com\rc\domain\dto\PatrolList.class
 com\rc\mapper\RsmSnapshotMapper.class
@@ -84,6 +83,7 @@ com\rc\utils\Md5Util.class
 com\rc\config\MvcConfig.class
 com\rc\service\impl\SysMenuServiceImpl.class
 com\rc\domain\entity\RsmSnapshot.class
+com\rc\utils\JwtUtil.class
 com\rc\service\impl\RsmUnverifiedRiskServiceImpl.class
 com\rc\service\IRsmUserService.class
 com\rc\domain\entity\RsmPatrolList.class

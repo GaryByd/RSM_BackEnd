@@ -30,8 +30,8 @@
             <if test="rsmTask.mandateHolder != null">
                 mandate_holder = #{rsmTask.mandateHolder},
             </if>
-            <if test="rsmTask.positionInfo != null">
-                position_info = #{rsmTask.positionInfo},
+            <if test="rsmTask.positionId != null">
+                position_id = #{rsmTask.positionId},
             </if>
             <if test="rsmTask.remark != null">
                 remark = #{rsmTask.remark},

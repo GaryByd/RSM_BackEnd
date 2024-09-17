@@ -7,14 +7,15 @@
         SELECT *
         FROM rsm_patrol_list
         <where>
-            <if test="startTime != null and endTime != null">
-                AND update_time BETWEEN #{startTime} AND #{endTime}
-            </if>
             <if test="startTime != null and endTime == null">
-                AND update_time &gt;= #{startTime}
+                AND start_time BETWEEN #{startTime} AND #{endTime}
             </if>
             <if test="endTime != null and startTime == null">
-                AND update_time &lt;= #{endTime}
+                AND end_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="endTime != null and startTime != null">
+                AND end_time &gt;= #{startTime}
+                AND start_time &lt;= #{endTime}
             </if>
             <if test="status != null">
                 AND status = #{status}
