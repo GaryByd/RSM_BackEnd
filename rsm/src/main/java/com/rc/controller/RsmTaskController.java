@@ -78,7 +78,6 @@ public class RsmTaskController {
 
     @ApiOperation("查询单个作业")
     @GetMapping("/tasks/{id}")
-    @PreAuthorize("hasAuthority('work:audit:')")
     public Result getTaskById(@PathVariable("id") Integer id) {
         return rsmTaskService.getTaskById(id);
     }

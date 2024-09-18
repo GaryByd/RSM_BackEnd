@@ -19,5 +19,4 @@ public class RedissonConfig {
         //创建对象
         return Redisson.create(config);
     }
-
 }

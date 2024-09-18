@@ -11,9 +11,14 @@ import com.rc.mapper.RsmUnverifiedRiskMapper;
 import com.rc.service.IRsmUnverifiedRiskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
+
+import static com.rc.utils.RedisConstants.HIDDEN_CHECKED_KEY;
+import static com.rc.utils.RedisConstants.LIST_CHECKED_KEY;
 
 /**
  * <p>
@@ -30,7 +35,8 @@ public class RsmUnverifiedRiskServiceImpl extends ServiceImpl<RsmUnverifiedRiskM
 
     @Autowired
     private RsmPatrolListMapper rsmPatrolListMapper;
-
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
     @Override
     public Result getUnverifiedRiskByListId(Integer checklistId) {
         //使用rsm_patrol_list的checklistId查询rsm_patrol_item表
@@ -46,21 +52,12 @@ public class RsmUnverifiedRiskServiceImpl extends ServiceImpl<RsmUnverifiedRiskM
     public Result unverifiedRiskDone(ItemsFormDTO itemsFormDTO, Integer checklistId, Integer itemId) {
 
         int status = itemsFormDTO.getStatus();
-        //发送过来的状态为3 则为已发现隐患
-        if(status==3){
-            //PatrolList表的hidden_trouble_count+1
-            int updated = rsmPatrolListMapper.update(
-                    new RsmPatrolList(), // 实体对象，可为空或者是新实例
-                    new UpdateWrapper<RsmPatrolList>()
-                            .setSql("hidden_trouble_count=hidden_trouble_count+1")
-                            .eq("id", checklistId)
-            );
-            if(updated==0){
-                return Result.fail("hidden_trouble_count修改失败");
-            }
+        //发送过来的状态为2 则为已发现隐患
+        String key = LIST_CHECKED_KEY + itemId;
+        Double score = stringRedisTemplate.opsForZSet().score( key, checklistId.toString());
+        if(score!=null){
+            return Result.fail("已经完成巡查，不能重复完成巡查");
         }
-
-
         //修改PatrolList表的checked_count+1
         int updated = rsmPatrolListMapper.update(
                 new RsmPatrolList(), // 实体对象，可为空或者是新实例
@@ -68,10 +65,23 @@ public class RsmUnverifiedRiskServiceImpl extends ServiceImpl<RsmUnverifiedRiskM
                         .setSql("checked_count=checked_count+1")
                         .eq("id", checklistId)
         );
+        stringRedisTemplate.opsForZSet().add(key, checklistId.toString(),System.currentTimeMillis());
         if(updated==0){
             return Result.fail("checked_count修改失败");
         }
 
+        if(status==2){
+            //PatrolList表的hidden_trouble_count+1
+            int hiddenUpdated = rsmPatrolListMapper.update(
+                    new RsmPatrolList(), // 实体对象，可为空或者是新实例
+                    new UpdateWrapper<RsmPatrolList>()
+                            .setSql("hidden_trouble_count=hidden_trouble_count+1")
+                            .eq("id", checklistId)
+            );
+            if(hiddenUpdated==0){
+                return Result.fail("hidden_trouble_count修改失败");
+            }
+        }
         //日常更新status 状态使用ItemId
         int updatedRows  = rsmUnverifiedRiskMapper.unverifiedRiskDone(itemsFormDTO, itemId);
         if(updatedRows == 0){
