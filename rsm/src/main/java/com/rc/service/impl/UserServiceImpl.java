@@ -4,9 +4,9 @@ package com.rc.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.json.JSONObject;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rc.domain.dto.*;
@@ -14,7 +14,6 @@ import com.rc.domain.entity.User;
 import com.rc.mapper.UserMapper;
 import com.rc.service.IUserService;
 import com.rc.utils.*;
-import io.jsonwebtoken.JwtBuilder;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +84,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result login(String code, HttpSession session) {
+        //解析code里面的code数据 json
+        String code_js = (String) JSONUtil.parse(code).getByPath("code");
         // 1. 使用 code 通过 WeiChatUtil 获取 openId
-        String openId = WeiChatUtil.getSessionId(code);
+        String openId = WeiChatUtil.getSessionId(code_js);
         //假设openid
-        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
         // 2. 检查 openId 是否有效
         if (openId == null || openId.isEmpty()) {
             return Result.fail(401, "无效的微信code，无法获取openId");

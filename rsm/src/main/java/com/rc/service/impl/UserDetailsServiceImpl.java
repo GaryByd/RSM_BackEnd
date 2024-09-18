@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.rc.domain.dto.LoginUser;
 import com.rc.domain.dto.UserDTO;
 import com.rc.domain.entity.User;
+import com.rc.exception.EmptyUserStatusException;
 import com.rc.mapper.SysMenuMapper;
 import com.rc.mapper.UserMapper;
 import com.rc.utils.WeiChatUtil;
@@ -37,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userMapper.selectOne(queryWrapper);
         // 3. 如果用户不存在，返回错误信息
         if (user == null) {
-            throw new RuntimeException("未绑定员工账号");
+            throw new EmptyUserStatusException("未绑定员工账号");
         }
 
         //TODO: 查询权限信息封装到LoginUser中

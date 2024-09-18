@@ -2,6 +2,7 @@ package com.rc.config;
 
 
 import com.rc.domain.dto.Result;
+import com.rc.exception.EmptyUserStatusException;
 import com.rc.handler.AccessDeniedHandlerImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +26,11 @@ public class WebExceptionAdvice {
         if(e instanceof AuthenticationException){
             return null;
         }
+        if(e instanceof EmptyUserStatusException){
+            return Result.fail(520,"未绑定账号");
+        }
+        //找不到路径
         log.error(e.toString(), e);
         return Result.fail("服务器异常");
-    }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public void handleNotFound(HttpServletResponse response) throws IOException {
-        // 返回 404 错误
-        response.sendError(HttpServletResponse.SC_NOT_FOUND, "请求的路径不存在");
     }
 }
