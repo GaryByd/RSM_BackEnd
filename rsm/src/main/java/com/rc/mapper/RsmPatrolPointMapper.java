@@ -13,5 +13,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RsmPatrolPointMapper extends BaseMapper<RsmPatrolPoint> {
 
-    RsmPatrolPoint getTaskPosition(Integer taskId, Integer positionId);
+
 }

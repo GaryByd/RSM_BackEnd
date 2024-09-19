@@ -10,11 +10,17 @@ import com.rc.domain.entity.RsmHiddenTrouble;
 import com.rc.mapper.RsmHiddenTroubleMapper;
 import com.rc.service.IRsmHiddenTroubleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rc.utils.CacheClient;
 import com.rc.utils.UserHolder;
+import io.lettuce.core.api.sync.RedisStringCommands;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static com.rc.utils.RedisConstants.*;
 
 /**
  * <p>
@@ -30,6 +36,13 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
     @Autowired
     private RsmHiddenTroubleMapper rsmHiddenTroubleMapper;
 
+    @Autowired
+    private CacheClient cacheClient;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+
     @Override
     public Result getHiddenTroubleList(Integer pageNumber, Integer pageSize, Integer status, String troubleClassify, String source, String keyword) {
         // 创建分页对象
@@ -43,20 +56,32 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
         return Result.ok("获取成功",hidden_list);
     }
 
+    private RsmHiddenTrouble getByIdWithCache(Long id){
+        return cacheClient.queryWithPassThrough(
+                HIDDEN_TROUBLE_KEY, // 缓存键，通常包括 ID
+                id, // 数据的 ID
+                RsmHiddenTrouble.class, // 返回的数据类型
+                rsmHiddenTroubleMapper::selectById, // 从数据库获取数据的方法
+                CACHE_NULL_TTL, // 缓存过期时间，Long 类型
+                TimeUnit.MINUTES // 时间单位
+        );
+    }
     @Override
     public Result getHiddenTroubleById(Long id) {
-        RsmHiddenTrouble hiddenTrouble = rsmHiddenTroubleMapper.selectById(id);
+        // 使用 queryWithLogicalExpire 缓存查询结果
+// 注意 expireTime 参数需要是 Long 类型
+        RsmHiddenTrouble hiddenTrouble = this.getByIdWithCache(id);
         if(hiddenTrouble==null){
             return Result.fail("未查询到该隐患信息");
         }
         return Result.ok("查询成功",hiddenTrouble);
     }
 
+
     @Override
     public Result addHiddenTrouble(RsmHiddenTrouble hiddenTrouble) {
-//        UserDTO user = UserHolder.getUser();
-//        Long userId = user.getId();
-        Long userId = 2L;
+        UserDTO user = UserHolder.getUser();
+        Long userId = user.getUserId();
         hiddenTrouble.setCreatorId(userId);
         //设置时间
         hiddenTrouble.setCreateTime(java.time.LocalDateTime.now());
@@ -81,7 +106,7 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
         if(!updated){
             return Result.fail("修改失败");
         }
-        return Result.ok("操作成功", rsmHiddenTroubleMapper.selectById(id));
+        return Result.ok("操作成功",this.getByIdWithCache(id));
     }
 
     @Override

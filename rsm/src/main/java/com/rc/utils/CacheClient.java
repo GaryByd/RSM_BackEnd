@@ -123,7 +123,8 @@ public class CacheClient {
         String key = keyPrefix+id;
         //1.从redis查询商铺
         String Json =  stringRedisTemplate.opsForValue().get(key);
-        //2.判断是否存在
+            System.out.println(Json);
+            //2.判断是否存在
         if(StrUtil.isBlank(Json)){
             //3.存在，直接返回
             System.out.println("缓存命中");

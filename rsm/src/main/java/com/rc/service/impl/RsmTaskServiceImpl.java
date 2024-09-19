@@ -7,10 +7,12 @@ import com.rc.domain.dto.Result;
 import com.rc.domain.dto.RsmTaskDTO;
 import com.rc.domain.dto.TaskList;
 import com.rc.domain.dto.UserDTO;
+import com.rc.domain.entity.RsmRisk;
 import com.rc.domain.entity.RsmTask;
 import com.rc.mapper.RsmTaskMapper;
 import com.rc.service.IRsmTaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rc.utils.CacheClient;
 import com.rc.utils.UserHolder;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -18,6 +20,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +31,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static cn.hutool.poi.excel.cell.CellUtil.getCellValue;
+import static com.rc.utils.RedisConstants.CACHE_TTL;
+import static com.rc.utils.RedisConstants.TASK_KEY;
 
 
 /**
@@ -46,6 +52,11 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
     @Autowired
     private RsmTaskMapper rsmTaskMapper;
 
+    @Autowired
+    private CacheClient cacheClient;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @Override
     public Result addTask(RsmTask rsmTask) {
         UserDTO user = UserHolder.getUser();
@@ -60,7 +71,7 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
         if (!save) {
             return Result.fail("添加失败");
         }
-        rsmTask = this.getById(rsmTask.getId());
+        rsmTask = this.getByIdWithCache(rsmTask.getId());
         return Result.ok("添加成功", rsmTask);
     }
 
@@ -86,7 +97,10 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
         if (updated == 0) {
             return Result.fail("修改失败");
         }
-        rsmTask = this.getById(id);
+        //修改成功
+        //删除缓存
+        stringRedisTemplate.delete(TASK_KEY + id);
+        rsmTask = this.getByIdWithCache(Long.valueOf(id));
         RsmTaskDTO rsmTaskDTO = new RsmTaskDTO();
         BeanUtils.copyProperties(rsmTask, rsmTaskDTO);
         return Result.ok("修改成功", rsmTaskDTO);
@@ -95,7 +109,7 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
 
     @Override
     public Result approvalTask(Integer id, RsmTask rsmTaskForm) {
-        RsmTask rsmTask = this.getById(id);
+        RsmTask rsmTask = this.getByIdWithCache(Long.valueOf(id));
         if (rsmTask == null) {
             return Result.fail("未找到该作业");
         }
@@ -109,6 +123,8 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
         if (!success) {
             return Result.fail("操作失败");
         }
+        //删除redis
+        stringRedisTemplate.delete(TASK_KEY + id);
         //操作成功
         return Result.ok("操作成功", (Object) "审核成功");
     }
@@ -121,17 +137,34 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
             return Result.fail("删除失败或没有该条数据");
         }
         //删除成功
+        //删除缓存
+        stringRedisTemplate.delete(TASK_KEY + id);
         return Result.ok("操作成功", (Object) "删除成功");
     }
 
+
+    private RsmTask getByIdWithCache(Long id) {
+        //缓存优化
+        return cacheClient.queryWithPassThrough(
+                TASK_KEY,
+                id,
+                RsmTask.class,
+                this::getById,
+                CACHE_TTL,
+                TimeUnit.MINUTES
+        );
+    }
     @Override
     public Result getTaskById(Integer id) {
-        RsmTask rsmTask = this.getById(id);
+        //缓存优化
+        RsmTask rsmTask = this.getByIdWithCache(Long.valueOf(id));
         if (rsmTask == null) {
             return Result.fail("未找到该作业");
         }
         return Result.ok("获取成功", rsmTask);
     }
+
+    //缓存优化
 
     @Override
     public Result importTask(MultipartFile file) {

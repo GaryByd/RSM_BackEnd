@@ -33,7 +33,7 @@ public class RsmPatrolPointController {
             @PathVariable("point_id") Integer pointId
     )
     {
-        return patrolPointService.getPatrolPointByListId(pointId);
+        return patrolPointService.getPatrolPointById(pointId);
     }
 
     @ApiOperation(value = "获取作业位置")

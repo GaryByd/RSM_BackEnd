@@ -4,10 +4,10 @@ package com.rc.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rc.domain.dto.*;
 import com.rc.domain.entity.User;
@@ -21,11 +21,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,15 +47,18 @@ import static com.rc.utils.SystemConstants.USER_NICK_NAME_PREFIX;
 @Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
-
+    @Resource
+    private PasswordEncoder passwordEncoder;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private UserMapper userMapper;
-
     @Resource
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CacheClient cacheClient;
     @Override
     public Result sendCode(String phone, HttpSession session) {
         //校验手机号
@@ -89,6 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 1. 使用 code 通过 WeiChatUtil 获取 openId
         String openId = WeiChatUtil.getSessionId(code_js);
         //假设openid
+        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
         // 2. 检查 openId 是否有效
         if (openId == null || openId.isEmpty()) {
             return Result.fail(401, "无效的微信code，无法获取openId");
@@ -151,41 +155,49 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(user!=null){
             return Result.fail("微信号已绑定");
         }
+
         //判断用户名是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name",userName);
         User user1 = query().eq("user_name", userName).one();
-        if(user1!=null){
-            return Result.fail("用户名已存在");
-        }
         //用户名不存在
-        //创建用户
-        User newUser = new User();
-        newUser.setOpenid(openId);
-        newUser.setPassword(Md5Util.getMD5String(password));
-        newUser.setUsername(loginFormDTO.getUserName());
-        //更新时间和创建时间
-        newUser.setCreateTime(LocalDateTime.now());
-        newUser.setUpdateTime(LocalDateTime.now());
-        newUser.setPhone(loginFormDTO.getPhone() != null ?loginFormDTO.getPhone():"");
-        newUser.setNickName(USER_NICK_NAME_PREFIX+RandomUtil.randomString(10));
-        save(newUser);
-        //user转为UserDTO
+        if(user1==null){
+            return Result.fail("用户名不存在");
+        }
+        //open_id没有被绑定校验密码
+        //校验密码 BCrypt校验
+        if(!passwordEncoder.matches(password,user1.getPassword())){
+            return Result.fail("密码错误");
+        }
+        //密码正确
+        user1.setOpenid(openId);
+        //更新user
+        boolean update = update(user1, new UpdateWrapper<User>().eq("user_id",user1.getId()).set("open_id", openId));
+        //user值导入userDTO
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserId(newUser.getId());
-        userDTO.setNickName(newUser.getNickName());
-        //头像
-        userDTO.setAvatar(newUser.getIcon());
-        //电话号码
-        userDTO.setPhoneNumber(newUser.getPhone());
+        //手动导入不用工具类
+        userDTO.setAvatar(user1.getIcon());
+        userDTO.setPhoneNumber(user1.getPhone());
+        userDTO.setRemark(user1.getRemark());
+        userDTO.setUserId(user1.getId());
+        userDTO.setNickName(user1.getNickName());
         return Result.ok("操作成功",userDTO);
+    }
 
-
+    private User getByIdWithCache(Long id) {
+        return cacheClient.queryWithPassThrough(
+                USER_KEY,
+                id,
+                User.class,
+                this::getById,
+                CACHE_TTL,
+                TimeUnit.MINUTES
+        );
     }
 
     @Override
     public Result queryUserById(Long id) {
-        User user = getById(id);
+        User user = this.getByIdWithCache(id);
         //判断用户是否存在
         if(user==null){
             return Result.fail("用户不存在");
@@ -204,7 +216,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(!success){
             return Result.fail("更新失败");
         }
-        User newUser = getById(userId);
+        //删除缓存
+        stringRedisTemplate.delete(USER_KEY+userId);
+        User newUser = this.getByIdWithCache(userId);
         userDTO = new UserDTO(newUser.getId(),newUser.getNickName(),newUser.getIcon(),newUser.getPhone(),newUser.getIcon());
         return Result.ok("更新成功",userDTO);
     }

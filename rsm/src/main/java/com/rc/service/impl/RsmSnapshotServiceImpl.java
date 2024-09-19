@@ -9,11 +9,16 @@ import com.rc.domain.entity.RsmSnapshot;
 import com.rc.mapper.RsmSnapshotMapper;
 import com.rc.service.IRsmSnapshotService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rc.utils.CacheClient;
 import com.rc.utils.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
+
+import static com.rc.utils.RedisConstants.*;
 
 
 /**
@@ -30,6 +35,10 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
 
     @Autowired
     private  RsmSnapshotMapper rsmSnapshotMapper;
+    @Autowired
+    private CacheClient cacheClient;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @Override
     public Result getSnapshotList(Integer pageNumber, Integer pageSize, Integer property) {
         // 创建分页对象
@@ -43,9 +52,24 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         return Result.ok("获取成功",snapShotList);
     }
 
+    private RsmSnapshot getByIdWithCache(Long id) {
+        //缓存优化
+        return cacheClient.queryWithPassThrough(
+                SNAPSHOTS_KEY,
+                id,
+                RsmSnapshot.class,
+                this::getById,
+                CACHE_TTL,
+                TimeUnit.MINUTES
+        );
+    }
+
     @Override
     public Result getSnapshotById(Long id) {
-        RsmSnapshot rsmSnapshot = rsmSnapshotMapper.selectById(id);
+        RsmSnapshot rsmSnapshot = this.getByIdWithCache(id);
+        if (rsmSnapshot==null) {
+            return Result.fail("随手拍获取失败");
+        }
         return Result.ok("获取成功",rsmSnapshot);
     }
 
@@ -63,7 +87,7 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         if (!saved) {
             return Result.fail("添加失败");
         }
-        return Result.ok("添加成功",rsmSnapshotMapper.selectById(rsmSnapshot.getId()));
+        return Result.ok("添加成功",this.getByIdWithCache(rsmSnapshot.getId()));
     }
 
     @Override
@@ -79,7 +103,9 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         if (updated<=0) {
             return Result.fail("修改失败");
         }
-        return Result.ok("修改成功",rsmSnapshotMapper.selectById(id));
+        //删除缓存
+        stringRedisTemplate.delete(SNAPSHOTS_KEY + id);
+        return Result.ok("修改成功",this.getByIdWithCache(rsmSnapshot.getId()));
     }
 
 }

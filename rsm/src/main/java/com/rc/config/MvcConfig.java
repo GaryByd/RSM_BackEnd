@@ -2,7 +2,6 @@ package com.rc.config;
 
 
 import com.rc.utils.LoginInterceptor;
-import com.rc.utils.RefreshTokenInterceptor;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
