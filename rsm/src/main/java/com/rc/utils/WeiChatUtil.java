@@ -17,7 +17,6 @@ public class WeiChatUtil {
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code";
         String replaceUrl = url.replace("{0}", appid).replace("{1}", secret).replace("{2}", code);
-        System.out.println(("发送链接为：" + replaceUrl));
         String res = HttpUtil.get(replaceUrl);
         System.out.println("发送链接后获得的数据"+res);
 
@@ -27,7 +26,7 @@ public class WeiChatUtil {
         // 获取 openid 字段
         String openid = jsonObject.getStr("openid");
         // 打印结果
-        System.out.println("openid: " + openid);
+//        System.out.println("openid: " + openid);
         return openid;
     }
 }

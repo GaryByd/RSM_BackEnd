@@ -38,7 +38,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
         String key = LOGIN_USER_KEY + token;
         Map<Object, Object> userMap = stringRedisTemplate.opsForHash().entries(key);
-        System.out.println(userMap); // 打印哈希数据
         if (userMap.isEmpty()) {
             // 放行，无效token
             filterChain.doFilter(request, response);

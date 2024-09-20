@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 public class RsmHiddenTroubleController {
 
     @Autowired private IRsmHiddenTroubleService rsmHiddenTroubleService;
+
+    
     @ApiOperation(value = "获取隐患列表(业务入口)")
     @RequestMapping("/hiddens")
     public Result getHiddenTroubleList(

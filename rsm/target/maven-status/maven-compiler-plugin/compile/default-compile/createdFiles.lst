@@ -1,8 +1,8 @@
 com\rc\service\IUserService.class
 com\rc\controller\RsmTaskController.class
 com\rc\domain\entity\RsmRisk.class
-com\rc\utils\SimpleRedisLock.class
 com\rc\controller\SysMenuController.class
+com\rc\domain\dto\PhoneDTO.class
 com\rc\utils\WeiChatUtil.class
 com\rc\controller\RsmPatrolPointController.class
 com\rc\domain\dto\CheckedList.class
@@ -20,9 +20,9 @@ com\rc\domain\dto\ItemsFormDTO.class
 com\rc\mapper\UserMapper.class
 com\rc\controller\RsmUnverifiedRiskController.class
 com\rc\mapper\RsmPatrolPointMapper.class
+com\rc\exception\EmptyUserStatusException.class
 com\rc\config\CorsConfig.class
 com\rc\handler\AccessDeniedHandlerImpl.class
-com\rc\utils\RefreshTokenInterceptor.class
 com\rc\service\impl\RsmHiddenTroubleServiceImpl.class
 com\rc\utils\CacheClient.class
 com\rc\domain\entity\RsmTask.class
@@ -45,6 +45,7 @@ com\rc\domain\entity\RsmPatrolPoint.class
 com\rc\service\impl\RsmPatrolListServiceImpl.class
 com\rc\controller\RsmHiddenTroubleController.class
 com\rc\config\OpenIdAuthenticationProvider.class
+com\rc\domain\dto\PassWordDTO.class
 com\rc\domain\dto\TaskList.class
 com\rc\mapper\RsmHiddenTroubleMapper.class
 com\rc\domain\dto\LoginUser.class
@@ -94,4 +95,3 @@ com\rc\controller\RsmPatrolListController.class
 com\rc\service\impl\UserServiceImpl.class
 com\rc\utils\UserHolder.class
 com\rc\controller\RsmHiddenTroubleRecordController.class
-com\rc\utils\PasswordEncoder.class

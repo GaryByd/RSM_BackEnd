@@ -2,9 +2,7 @@ package com.rc.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import com.rc.domain.dto.LoginFormDTO;
-import com.rc.domain.dto.Result;
-import com.rc.domain.dto.UserDTO;
+import com.rc.domain.dto.*;
 import com.rc.domain.entity.RsmUser;
 import com.rc.domain.entity.User;
 import com.rc.service.IUserService;
@@ -32,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/mp")
 public class UserController {
-
     @Resource
     private IUserService userService;
 
@@ -61,7 +58,7 @@ public class UserController {
      */
     @ApiOperation(value = "绑定员工账号并登入")
     @PostMapping("/bindEmployeeAccount")
-    public Result bandWithPasswd(@RequestBody LoginFormDTO loginForm, HttpSession session){
+    public Result bandWithPasswd(@RequestBody LoginFormDTO loginForm, HttpSession session) throws Exception {
         //实现登入功能
         return userService.bandWithPasswd(loginForm,session);
     }
@@ -99,17 +96,33 @@ public class UserController {
 
 
 
-//
-//    /**
-//     //     * 登录功能
-//     //     * @param  ，包含手机号、验证码；或者手机号、密码
-//     //     */
-//    @ApiOperation(value = "验证验证码")
-//    @PostMapping("/login/phone")
-//    public Result bandWithPasswd(@RequestBody String code, HttpSession session){
-//        //实现登入功能
-//        return userService.bandWithPasswd(code,session);
-//    }
+
+    /**
+    * 登录功能
+    * @param  ，包含手机号、验证码；或者手机号、密码
+    */
+    @ApiOperation(value = "验证验证码")
+    @PostMapping("/smscode/verify")
+    public Result verifyCode(@RequestBody PhoneDTO phoneDTO, HttpSession session){
+        //实现登入功能
+        return userService.verifyCode(phoneDTO,session);
+    }
+
+    /**
+     * 发送手机验证码
+     */
+    @ApiOperation(value = "发送验证码")
+    @PostMapping("/smscode/send")
+    public Result sendCode(@RequestBody PhoneDTO phoneDTO, HttpSession session) {
+        log.info("发送验证码短信验证码，手机号：{}", phoneDTO.getPhoneNumber());
+        return userService.sendCode(phoneDTO.getPhoneNumber(), session);
+    }
+
+    @ApiOperation(value = "修改我的密码")
+    @PostMapping("/me/password/change")
+    public Result updatePassword(@RequestBody PassWordDTO passWordDTO) throws Exception {
+        return userService.updatePassword(passWordDTO);
+    }
 //    /**
 //     *
 //     * @param id
@@ -137,7 +150,7 @@ public class UserController {
 //        log.info("发送验证码短信验证码，手机号：{}", loginFormDTO.getPhone());
 //        return userService.sendCode(loginFormDTO.getPhone(), session);
 //    }
-//
+
 //    /**
 //     * 登录功能
 //     * @param  ，包含手机号、验证码；或者手机号、密码

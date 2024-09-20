@@ -14,6 +14,7 @@ A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\mapper\RsmTaskMapper.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\RedisData.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\dto\PatrolList.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\filter\RefreshTokenFilter.java
+A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\exception\EmptyUserStatusException.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\entity\RsmHiddenTrouble.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\dto\UserDTO.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\config\WebExceptionAdvice.java
@@ -41,8 +42,8 @@ A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\entity\RsmPatrolList.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\service\impl\RsmRiskServiceImpl.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\dto\UserList.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\mapper\RsmHiddenTroubleMapper.java
+A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\dto\PhoneDTO.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\entity\RsmHiddenTroubleRecord.java
-A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\PasswordEncoder.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\dto\HiddenList.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\service\IRsmHiddenTroubleRecordService.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\config\OpenIdAuthenticationProvider.java
@@ -67,7 +68,6 @@ A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\entity\RsmTask.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\entity\SysMenu.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\config\RedisConfig.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\service\IRsmUnverifiedRiskService.java
-A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\RefreshTokenInterceptor.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\UserHolder.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\RedisIdWorker.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\WeiChatUtil.java
@@ -77,10 +77,10 @@ A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\RedisConstants.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\handler\AccessDeniedHandlerImpl.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\Md5Util.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\controller\RsmPatrolListController.java
+A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\dto\PassWordDTO.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\controller\RsmHiddenTroubleRecordController.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\controller\RsmRiskController.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\domain\entity\RsmPatrolPoint.java
-A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\utils\SimpleRedisLock.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\service\impl\RsmHiddenTroubleRecordServiceImpl.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\service\IRsmUserService.java
 A:\Desktop\RSM_V1.0\rsm\src\main\java\com\rc\mapper\UserMapper.java

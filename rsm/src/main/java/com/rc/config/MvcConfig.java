@@ -22,8 +22,9 @@ public class MvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/api/mp/login/weixin",
-                        "/api/mp/login/exit",
-                        "/api/mp/bindEmployeeAccount"
+                        "/api/mp/bindEmployeeAccount",
+                        "/api/mp/smscode/verify",
+                        "/api/mp/smscode/send"
                 ).order(0);
     }
 }

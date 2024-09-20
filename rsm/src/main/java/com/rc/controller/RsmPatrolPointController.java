@@ -25,7 +25,7 @@ public class RsmPatrolPointController {
     @Autowired
     private IRsmPatrolPointService patrolPointService;
 
-
+    @ApiOperation(value = "获取巡查点")
     @RequestMapping("/patrol/checklists/{checklist_id}/items/{item_id}/points/{point_id}")
     public Result getPatrolPointByListId(
             @PathVariable("checklist_id") Integer checklistId,

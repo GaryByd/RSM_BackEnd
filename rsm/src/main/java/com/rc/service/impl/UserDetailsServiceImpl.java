@@ -40,8 +40,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new EmptyUserStatusException("未绑定员工账号");
         }
-
-        //TODO: 查询权限信息封装到LoginUser中
 //        ArrayList<String> list = new ArrayList<>();
 //        list.add("user");
         List<String> list = menuMapper.selectPermsByUserId(user.getId());
@@ -50,7 +48,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 14. 更新用户登录 IP（假设你有获取 IP 的逻辑）
         userMapper.updateById(user);
         UserDTO userDTO = new UserDTO(user.getId(),user.getNickName(),user.getIcon(),user.getPhone(),user.getRemark());
-        System.out.println(userDTO.toString()+"================================================");
         // 将用户信息封装到UserDetails实现类中
         return new LoginUser(userDTO,list);
     }

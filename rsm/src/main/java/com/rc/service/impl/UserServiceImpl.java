@@ -5,7 +5,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -26,14 +25,14 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static com.rc.utils.RedisConstants.*;
-import static com.rc.utils.SystemConstants.USER_NICK_NAME_PREFIX;
+import static com.rc.utils.KeyContents.*;
 
 /**
  * <p>
@@ -59,6 +58,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private CacheClient cacheClient;
+
+    @Override
+    public Result verifyCode(PhoneDTO phoneDTO, HttpSession session) {
+        String phone = phoneDTO.getPhoneNumber();
+        String code = phoneDTO.getCode();
+
+        if(code==null){
+            return Result.fail("验证码为空");
+        }
+        //1.校验手机号
+        if(RegexUtils.isPhoneInvalid(phone)){
+            //2.校验验证码,返回错误信息
+            return Result.fail("手机号格式错误");
+        }
+        //不一致直接报错 redis
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY+phone);
+        if(cacheCode==null||!cacheCode.equals(code)){
+            return Result.fail("验证码错误");
+        }
+        //验证成功
+        return Result.ok("操作成功", (Object) "绑定成功");
+    }
+
     @Override
     public Result sendCode(String phone, HttpSession session) {
         //校验手机号
@@ -72,7 +94,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY+phone,code,LOGIN_CODE_TTL, TimeUnit.MINUTES);
         System.out.println("OK");
         return Result.ok("success", (Object) code);
-
     }
 
 
@@ -129,9 +150,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Result bandWithPasswd(LoginFormDTO loginFormDTO, HttpSession session) {
+    public Result bandWithPasswd(LoginFormDTO loginFormDTO, HttpSession session) throws Exception {
         //获取密码
-        String password = loginFormDTO.getPassWord();
+        //私钥解密
+        String password = RsaUtil.decryptByPrivateKey(loginFormDTO.getPassWord(),PRIVATE_KEY);
+//        System.out.println("解密后:"+password);
         //获取WeiXincode
         String weiXinCode = loginFormDTO.getWeiXinCode();
         //获取username
@@ -173,6 +196,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user1.setOpenid(openId);
         //更新user
         boolean update = update(user1, new UpdateWrapper<User>().eq("user_id",user1.getId()).set("open_id", openId));
+        if(!update){
+            return Result.fail(520,"绑定失败");
+        }
         //user值导入userDTO
         UserDTO userDTO = new UserDTO();
         //手动导入不用工具类
@@ -232,6 +258,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         UserList userList = new UserList(list, (long) list.size());
 
         return Result.ok("获取成功", userList);
+    }
+
+    @Override
+    public Result updatePassword(PassWordDTO passWordDTO) throws Exception {
+        String newPassword = RsaUtil.decryptByPrivateKey(passWordDTO.getNewPassword(),PRIVATE_KEY);
+        String oldPassword =  RsaUtil.decryptByPrivateKey(passWordDTO.getOldPassword(),PRIVATE_KEY);
+        //获取用户信息
+        UserDTO nowUser = UserHolder.getUser();
+        //从数据库中获取密码
+        User user = this.getByIdWithCache(nowUser.getUserId());
+        String userPassword = user.getPassword();
+        //判断旧密码是否正确
+        if(!passwordEncoder.matches(oldPassword,userPassword)){
+            return Result.fail(520,"旧密码错误");
+        }
+        boolean update = update(user, new UpdateWrapper<User>().eq("user_id",user.getId()).set("password", passwordEncoder.encode(newPassword)));
+        if(!update){
+            return Result.fail(520,"修改失败");
+        }
+        stringRedisTemplate.delete(USER_KEY+nowUser.getUserId());
+        return Result.ok("操作成功", (Object) "修改成功");
     }
 
 

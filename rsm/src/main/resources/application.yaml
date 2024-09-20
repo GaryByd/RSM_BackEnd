@@ -27,8 +27,8 @@ mybatis-plus:
 logging:
   level:
     com.hmdp: DEBUG
-#    org.springframework.security: DEBUG
-#    org.springframework.boot: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.boot: DEBUG
 
 
 #weixin:

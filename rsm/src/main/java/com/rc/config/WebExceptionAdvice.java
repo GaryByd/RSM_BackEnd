@@ -6,10 +6,12 @@ import com.rc.exception.EmptyUserStatusException;
 import com.rc.handler.AccessDeniedHandlerImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
@@ -33,4 +35,6 @@ public class WebExceptionAdvice {
         log.error(e.toString(), e);
         return Result.fail("服务器异常");
     }
+
+
 }

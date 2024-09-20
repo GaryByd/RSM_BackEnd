@@ -17,6 +17,11 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.17.4</version>
+        </dependency>
         <!-- AspectJ Weaving -->
         <dependency>
             <groupId>org.aspectj</groupId>
