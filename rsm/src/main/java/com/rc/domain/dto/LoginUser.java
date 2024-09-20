@@ -31,16 +31,21 @@ public class LoginUser implements UserDetails {
     private List<SimpleGrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (authorities != null){
+        // 如果 authorities 不为空，直接返回已缓存的权限列表
+        if (authorities != null) {
             return authorities;
         }
-        ////把permissions中字符串类型的权限信息转换成GrantedAuthority对象存入authorities
+
+        // 把 permissions 中字符串类型的权限信息转换成 GrantedAuthority 对象存入 authorities
         authorities = permissions.stream()
+                // 过滤掉 null、空字符串和只有空白字符的权限信息
+                .filter(permission -> permission != null && !permission.trim().isEmpty())
+                // 把权限信息转换成 SimpleGrantedAuthority 对象
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+
         return authorities;
     }
-
     @Override
     public String getPassword() {
         return null;
