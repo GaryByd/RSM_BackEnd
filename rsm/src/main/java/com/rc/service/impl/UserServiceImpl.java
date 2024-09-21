@@ -113,7 +113,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 1. 使用 code 通过 WeiChatUtil 获取 openId
         String openId = WeiChatUtil.getSessionId(code_js);
         //假设openid
-        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
+//        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
         // 2. 检查 openId 是否有效
         if (openId == null || openId.isEmpty()) {
             return Result.fail(401, "无效的微信code，无法获取openId");
