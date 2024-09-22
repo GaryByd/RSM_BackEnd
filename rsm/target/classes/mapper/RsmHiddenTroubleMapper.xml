@@ -46,13 +46,13 @@
                  or trouble_desc like concat('%',#{keyword},'%')
             </if>
         </where>
-        ORDER BY update_time
+        ORDER BY update_time Desc
     </select>
     <select id="getMyHiddenTrouble" resultType="com.rc.domain.entity.RsmHiddenTrouble"
             parameterType="java.lang.Long">
         select * from rsm_hidden_trouble
         where handler_id = #{userId}
-        ORDER BY update_time
+        ORDER BY update_time Desc
     </select>
 
 </mapper>
