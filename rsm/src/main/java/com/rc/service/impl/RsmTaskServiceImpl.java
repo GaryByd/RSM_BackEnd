@@ -219,19 +219,22 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
             e.printStackTrace();
             return Result.ok("文件读取失败");
         }
+        //开启线程来实现
 
-        if (!taskList.isEmpty()) {
-            // 使用批量插入
-            int batchSize = 500;
-            for (int i = 0; i < taskList.size(); i += batchSize) {
-                int end = Math.min(i + batchSize, taskList.size());
-                List<RsmTask> batchList = taskList.subList(i, end);
-                rsmTaskMapper.insertBatch(batchList);
-            }
-            return Result.ok("操作成功", (Object) ("导入成功，共导入 " + taskList.size() + " 条数据"));
-        } else {
+        if (taskList.isEmpty()) {
             return Result.fail("没有有效数据");
         }
+        // 使用批量插入
+        new Thread(
+                () -> {
+                    int batchSize = 500;
+                    for (int i = 0; i < taskList.size(); i += batchSize) {
+                        int end = Math.min(i + batchSize, taskList.size());
+                        List<RsmTask> batchList = taskList.subList(i, end);
+                        rsmTaskMapper.insertBatch(batchList);
+                    }
+                }
+        ).start();
+        return Result.ok("操作成功", (Object) ("导入成功，共导入 " + taskList.size() + " 条数据"));
     }
-
 }

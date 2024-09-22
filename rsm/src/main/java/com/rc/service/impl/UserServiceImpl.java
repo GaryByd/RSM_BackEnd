@@ -219,7 +219,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 id,
                 User.class,
                 this::getById,
-                CACHE_TTL,
+                60L,
                 TimeUnit.MINUTES
         );
     }
@@ -254,12 +254,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result queryUserByKeyword(String keyword) {
-
         // 调用 Mapper 方法，执行分页查询
-
         List<UserDTO> list = userMapper.getUserList(keyword);
         UserList userList = new UserList(list, (long) list.size());
-
         return Result.ok("获取成功", userList);
     }
 
