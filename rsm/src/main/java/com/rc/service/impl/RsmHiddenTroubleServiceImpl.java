@@ -97,7 +97,6 @@ public class RsmHiddenTroubleServiceImpl extends ServiceImpl<RsmHiddenTroubleMap
     public Result handleHiddenTrouble(Long id, RsmHiddenTrouble hiddenTrouble) {
         UserDTO user = UserHolder.getUser();
         Long userId = user.getUserId();
-
         hiddenTrouble.setHandlerId(userId);
         hiddenTrouble.setUpdateTime(java.time.LocalDateTime.now());
         //上传处理时间

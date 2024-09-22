@@ -225,8 +225,7 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
             return Result.fail("没有有效数据");
         }
         // 使用批量插入
-        new Thread(
-                () -> {
+        new Thread(() -> {
                     int batchSize = 500;
                     for (int i = 0; i < taskList.size(); i += batchSize) {
                         int end = Math.min(i + batchSize, taskList.size());
