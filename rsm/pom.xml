@@ -11,7 +11,7 @@
     <groupId>com.rc</groupId>
     <artifactId>rsm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SecurityTest</name>
+    <name>RSM-WeiXin</name>
     <description>SecurityTest</description>
     <properties>
         <java.version>17</java.version>

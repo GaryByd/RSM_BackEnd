@@ -213,8 +213,6 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
                     task.setUpdateTime(LocalDateTime.parse(updateTimeStr, formatter));
                 }
 
-
-
                 taskList.add(task);
             }
         } catch (IOException e) {
