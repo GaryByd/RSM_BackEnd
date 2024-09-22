@@ -29,7 +29,7 @@ import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static com.rc.utils.RedisConstants.*;
 import static com.rc.utils.KeyContents.*;
@@ -135,16 +135,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String tokenId = JwtUtil.getUUID();
         //8.认证通过生成token
         String token = JwtUtil.createJWT(tokenId, String.valueOf(userId),2592000000L);
-
-        // 10. 将 UserDTO 对象转换为 Map 并存储到 Redis 中
-        Map<String, Object> userMap = BeanUtil.beanToMap(loginUser, new HashMap<>(),
-                CopyOptions.create().setIgnoreNullValue(true)
-                        .setFieldValueEditor((key, value) -> value != null ? value.toString() : ""));
-        stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, userMap);
-        // 11. 设置 Redis 过期时间
-        stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.MINUTES);
-        // 12. 在 session 中保存用户信息
-        session.setAttribute("user", loginUser.getUser());
+        //线程处理
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            // 10. 将 UserDTO 对象转换为 Map 并存储到 Redis 中
+            Map<String, Object> userMap = BeanUtil.beanToMap(loginUser, new HashMap<>(),
+                    CopyOptions.create().setIgnoreNullValue(true)
+                            .setFieldValueEditor((key, value) -> value != null ? value.toString() : ""));
+            stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, userMap);
+            // 11. 设置 Redis 过期时间
+            stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.MINUTES);
+            // 12. 在 session 中保存用户信息
+            session.setAttribute("user", loginUser.getUser());
+        });
         // 15. 返回 token 和用户信息
         return Result.ok("操作成功", (Object) token);
     }
@@ -293,17 +296,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result getTodoList() {
-        //获取rsm_unverified_risk表中status为0的数据
-        Long unverifiedRiskCount = rsmUnverifiedRiskMapper.selectCount(new QueryWrapper<RsmUnverifiedRisk>().eq("status", 0));
-        //hidden表中status数据为0的数据
-        Long hiddenTroubleCount = rsmHiddenTroubleMapper.selectCount(new QueryWrapper<RsmHiddenTrouble>().eq("status", 0));
-        //获取snap表中的status为0的数据
-        Long snapshotCount = rsmSnapshotMapper.selectCount(new QueryWrapper<RsmSnapshot>().eq("property", 0));
-        //获取task表中的approval_status为0的数据
-        Long taskCount = rsmTaskMapper.selectCount(new QueryWrapper<RsmTask>().eq("approval_status", 0));
-        Long total = unverifiedRiskCount+hiddenTroubleCount+snapshotCount+taskCount;
-        TodoList todoList = new TodoList(total,unverifiedRiskCount,hiddenTroubleCount,snapshotCount,taskCount);
-        return Result.ok("您的今日代办喵!",todoList);
+        // 创建一个线程池来管理并发任务
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        try {
+            // 定义 Future 来异步获取每个查询操作的结果
+            Future<Long> unverifiedRiskCountFuture = executorService.submit(() ->
+                    rsmUnverifiedRiskMapper.selectCount(new QueryWrapper<RsmUnverifiedRisk>().eq("status", 0))
+            );
+
+            Future<Long> hiddenTroubleCountFuture = executorService.submit(() ->
+                    rsmHiddenTroubleMapper.selectCount(new QueryWrapper<RsmHiddenTrouble>().eq("status", 0))
+            );
+
+            Future<Long> snapshotCountFuture = executorService.submit(() ->
+                    rsmSnapshotMapper.selectCount(new QueryWrapper<RsmSnapshot>().eq("property", 0))
+            );
+
+            Future<Long> taskCountFuture = executorService.submit(() ->
+                    rsmTaskMapper.selectCount(new QueryWrapper<RsmTask>().eq("approval_status", 0))
+            );
+            // 获取每个任务的结果，注意这里会阻塞直到任务完成
+            Long unverifiedRiskCount = unverifiedRiskCountFuture.get();
+            Long hiddenTroubleCount = hiddenTroubleCountFuture.get();
+            Long snapshotCount = snapshotCountFuture.get();
+            Long taskCount = taskCountFuture.get();
+            // 计算总数
+            Long total = unverifiedRiskCount + hiddenTroubleCount + snapshotCount + taskCount;
+
+            // 创建待办事项列表
+            TodoList todoList = new TodoList(total, unverifiedRiskCount, hiddenTroubleCount, snapshotCount, taskCount);
+
+            // 返回结果
+            return Result.ok("您的今日代办喵!", todoList);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return Result.fail("获取数据时出现错误");
+        } finally {
+            // 关闭线程池
+            executorService.shutdown();
+        }
     }
 
 

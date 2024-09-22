@@ -46,7 +46,7 @@ public class FileController {
             return Result.fail("URL 无效或格式不正确");
         }
 //        System.out.println(imgUrl);
-        AliOssUtil.deleteFile(imgUrl);
-        return Result.ok("操作成功", (Object) "删除成功");
+        String deleteFileMsg = AliOssUtil.deleteFile(imgUrl);
+        return Result.ok("操作成功", (Object) deleteFileMsg);
     }
 }

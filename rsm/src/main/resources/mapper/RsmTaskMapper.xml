@@ -72,6 +72,6 @@
                 AND task_name LIKE concat('%',#{keyword},'%')
             </if>
         </where>
-        ORDER BY update_time
+        ORDER BY update_time Desc
     </select>
 </mapper>

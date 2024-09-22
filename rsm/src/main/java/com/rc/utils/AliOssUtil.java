@@ -64,12 +64,13 @@ public class AliOssUtil {
         return url;
     }
     //删除文件
-    public static void deleteFile(String objectName) throws Exception {
+    public static String deleteFile(String objectName) throws Exception {
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(Endpoint,ACCESS_KEY_ID,ACCESS_KEY_SECRET);
         try {
             // 删除文件或目录。如果要删除目录，目录必须为空。
             ossClient.deleteObject(BucketName, objectName);
+            return "删除成功";
         } catch (OSSException oe) {
             System.out.println("Caught an OSSException, which means your request made it to OSS, "
                     + "but was rejected with an error response for some reason.");
@@ -87,5 +88,6 @@ public class AliOssUtil {
                 ossClient.shutdown();
             }
         }
+        return "删除失败oss中没有此文件";
     }
 }

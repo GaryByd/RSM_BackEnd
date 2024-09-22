@@ -35,6 +35,6 @@
                 AND property = #{property}
             </if>
         </where>
-        ORDER BY update_time
+        ORDER BY update_time Desc
     </select>
 </mapper>
