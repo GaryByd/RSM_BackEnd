@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rc.domain.dto.*;
-import com.rc.domain.entity.User;
-import com.rc.mapper.UserMapper;
+import com.rc.domain.entity.*;
+import com.rc.mapper.*;
 import com.rc.service.IUserService;
 import com.rc.utils.*;
 import jakarta.servlet.http.HttpSession;
@@ -113,7 +113,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 1. 使用 code 通过 WeiChatUtil 获取 openId
         String openId = WeiChatUtil.getSessionId(code_js);
         //假设openid
-//        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
+        openId = "owhoa7fITbB2gA1N4dxwWmjN8Xsw";
         // 2. 检查 openId 是否有效
         if (openId == null || openId.isEmpty()) {
             return Result.fail(401, "无效的微信code，无法获取openId");
@@ -279,6 +279,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         stringRedisTemplate.delete(USER_KEY+nowUser.getUserId());
         return Result.ok("操作成功", (Object) "修改成功");
+    }
+
+
+    @Autowired
+    private RsmUnverifiedRiskMapper rsmUnverifiedRiskMapper;
+    @Autowired
+    private RsmHiddenTroubleMapper rsmHiddenTroubleMapper;
+    @Autowired
+    private RsmSnapshotMapper rsmSnapshotMapper;
+    @Autowired
+    private RsmTaskMapper rsmTaskMapper;
+
+    @Override
+    public Result getTodoList() {
+        //获取rsm_unverified_risk表中status为0的数据
+        Long unverifiedRiskCount = rsmUnverifiedRiskMapper.selectCount(new QueryWrapper<RsmUnverifiedRisk>().eq("status", 0));
+        //hidden表中status数据为0的数据
+        Long hiddenTroubleCount = rsmHiddenTroubleMapper.selectCount(new QueryWrapper<RsmHiddenTrouble>().eq("status", 0));
+        //获取snap表中的status为0的数据
+        Long snapshotCount = rsmSnapshotMapper.selectCount(new QueryWrapper<RsmSnapshot>().eq("property", 0));
+        //获取task表中的approval_status为0的数据
+        Long taskCount = rsmTaskMapper.selectCount(new QueryWrapper<RsmTask>().eq("approval_status", 0));
+        Long total = unverifiedRiskCount+hiddenTroubleCount+snapshotCount+taskCount;
+        TodoList todoList = new TodoList(total,unverifiedRiskCount,hiddenTroubleCount,snapshotCount,taskCount);
+        return Result.ok("您的今日代办喵!",todoList);
     }
 
 

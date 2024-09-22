@@ -59,7 +59,6 @@ public class RsmTaskController {
 
     @ApiOperation("审核作业")
     @PutMapping("/tasks/{id}/review")
-    @PreAuthorize("hasAuthority('work:audit:list')")
     public Result approvalTask(
             @PathVariable("id") Integer id,
             @RequestBody RsmTask rsmTask

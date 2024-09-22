@@ -123,6 +123,12 @@ public class UserController {
     public Result updatePassword(@RequestBody PassWordDTO passWordDTO) throws Exception {
         return userService.updatePassword(passWordDTO);
     }
+
+    @ApiOperation(value = "获取今日代办")
+    @GetMapping("/me/todo")
+    public Result getTodoList() {
+        return userService.getTodoList();
+    }
 //    /**
 //     *
 //     * @param id

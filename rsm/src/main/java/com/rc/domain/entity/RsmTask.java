@@ -80,7 +80,7 @@ public class RsmTask implements Serializable {
 
     @ApiModelProperty(value = "位置信息")
     @JsonProperty("position_id")
-    private Integer positionId;
+    private Long positionId;
 
     @ApiModelProperty(value = "创建人")
     private String createBy;

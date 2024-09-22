@@ -192,7 +192,7 @@ public class RsmTaskServiceImpl extends ServiceImpl<RsmTaskMapper, RsmTask> impl
                 task.setApprovalStatus((int) row.getCell(8).getNumericCellValue()); // approval_status
                 task.setReviewer((String) getCellValue(row.getCell(9)));  // reviewer
                 task.setTaskDesc((String) getCellValue(row.getCell(10)));  // task_desc
-                task.setPositionId((Integer) getCellValue(row.getCell(11))); // position_info
+                task.setPositionId((Long) getCellValue(row.getCell(11))); // position_id
                 task.setCreateBy((String) getCellValue(row.getCell(12))); // create_by
                 task.setRemark((String) getCellValue(row.getCell(13)));    // remark
 

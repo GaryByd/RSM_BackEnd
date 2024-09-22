@@ -37,6 +37,8 @@ public interface IUserService extends IService<User> {
 
     Result updatePassword(PassWordDTO passWordDTO) throws Exception;
 
+    Result getTodoList();
+
 
 //    Result bandWithPhone(String code, HttpSession session);
 //    Result sign();

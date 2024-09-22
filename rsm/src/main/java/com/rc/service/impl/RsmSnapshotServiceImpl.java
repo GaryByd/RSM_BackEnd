@@ -9,6 +9,7 @@ import com.rc.domain.entity.RsmSnapshot;
 import com.rc.mapper.RsmSnapshotMapper;
 import com.rc.service.IRsmSnapshotService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rc.utils.AliOssUtil;
 import com.rc.utils.CacheClient;
 import com.rc.utils.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static com.rc.utils.RedisConstants.*;
@@ -82,7 +84,7 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         //更新时间
         rsmSnapshot.setCreateTime(LocalDateTime.now());
         rsmSnapshot.setUpdateTime(LocalDateTime.now());
-        //名字
+        //正式添加进去
         boolean saved = this.save(rsmSnapshot);
         if (!saved) {
             return Result.fail("添加失败");
@@ -99,6 +101,28 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         rsmSnapshot.setHandlerTime(LocalDateTime.now());
         rsmSnapshot.setHandlerId(userId);
         rsmSnapshot.setUpdateTime(LocalDateTime.now());
+        //查询rsm
+        RsmSnapshot OldRsmSnapshot = this.getByIdWithCache(id);
+        if (OldRsmSnapshot==null) {
+            return Result.fail("数据不存在请重新查询");
+        }
+        //获取旧数据中的url
+        String imgPath = OldRsmSnapshot.getImgPath();
+        //处理Url以逗号分割进入列表
+        String[] imgPaths = imgPath.split(",");
+        //再开一个线程用于删除imgPaths
+        new Thread(() -> {
+            Arrays.stream(imgPaths).forEach(path -> {
+                //删除图片
+                try {
+                    AliOssUtil.deleteFile(path);
+//                    System.out.println(path);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }).start();
+        //正式修改
         int updated = rsmSnapshotMapper.handelSnapshot(rsmSnapshot,id);
         if (updated<=0) {
             return Result.fail("修改失败");

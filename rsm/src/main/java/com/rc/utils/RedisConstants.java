@@ -8,7 +8,7 @@ public class RedisConstants {
 
     public static final Long CACHE_NULL_TTL = 2L;
 
-    public static final Long CACHE_TTL =  30L;
+    public static final Long CACHE_TTL =  720L;
     public static final String HIDDEN_TROUBLE_KEY = "cache:hiddenTrouble:";
 
     public static final String USER_KEY = "cache:user:";
