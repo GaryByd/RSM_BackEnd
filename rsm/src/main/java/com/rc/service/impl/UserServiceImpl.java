@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 import java.security.PrivateKey;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -283,7 +285,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
     @Autowired
-    private RsmUnverifiedRiskMapper rsmUnverifiedRiskMapper;
+    private RsmPatrolListMapper rsmPatrolListMapper ;
     @Autowired
     private RsmHiddenTroubleMapper rsmHiddenTroubleMapper;
     @Autowired
@@ -293,44 +295,77 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result getTodoList() {
-        // 创建一个线程池来管理并发任务
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
-        try {
-            // 定义 Future 来异步获取每个查询操作的结果
-            Future<Long> unverifiedRiskCountFuture = executorService.submit(() ->
-                    rsmUnverifiedRiskMapper.selectCount(new QueryWrapper<RsmUnverifiedRisk>().eq("status", 0))
-            );
+        // 获取本地用户
+        UserDTO user = UserHolder.getUser();
+        // 获取今天日期
+        LocalDate now = LocalDate.now();
+        long total;
+        TodoList todoList = new TodoList(0L, 0L, 0L, 0L, 0L);
 
-            Future<Long> hiddenTroubleCountFuture = executorService.submit(() ->
-                    rsmHiddenTroubleMapper.selectCount(new QueryWrapper<RsmHiddenTrouble>().eq("status", 0))
-            );
+        // 创建一个异步任务列表
+        List<CompletableFuture<Long>> futures = new ArrayList<>();
 
-            Future<Long> snapshotCountFuture = executorService.submit(() ->
+        // 异步查询巡查列表数量
+        CompletableFuture<Long> patrolListFuture = CompletableFuture.supplyAsync(() ->
+                rsmPatrolListMapper.selectCount(new QueryWrapper<RsmPatrolList>()
+                        .eq("status", 0)
+                        .eq("create_time", now)
+                        .eq("principal_id", user.getUserId()))
+        );
+        futures.add(patrolListFuture);
+
+        // 异步查询隐患处理数量
+        CompletableFuture<Long> hiddenTroubleCountFuture = CompletableFuture.supplyAsync(() ->
+                rsmHiddenTroubleMapper.selectCount(new QueryWrapper<RsmHiddenTrouble>()
+                        .eq("status", 0)
+                        .eq("handler_id", user.getUserId()))
+        );
+        futures.add(hiddenTroubleCountFuture);
+
+        // 安全员或管理员权限时查询其他信息
+        if (user.getRemark().equals("安全员") || user.getRemark().equals("管理员")) {
+            CompletableFuture<Long> snapshotCountFuture = CompletableFuture.supplyAsync(() ->
                     rsmSnapshotMapper.selectCount(new QueryWrapper<RsmSnapshot>().eq("property", 0))
             );
+            futures.add(snapshotCountFuture);
 
-            Future<Long> taskCountFuture = executorService.submit(() ->
+            CompletableFuture<Long> taskCountFuture = CompletableFuture.supplyAsync(() ->
                     rsmTaskMapper.selectCount(new QueryWrapper<RsmTask>().eq("approval_status", 0))
             );
-            // 获取每个任务的结果，注意这里会阻塞直到任务完成
-            Long unverifiedRiskCount = unverifiedRiskCountFuture.get();
-            Long hiddenTroubleCount = hiddenTroubleCountFuture.get();
-            Long snapshotCount = snapshotCountFuture.get();
-            Long taskCount = taskCountFuture.get();
+            futures.add(taskCountFuture);
+        }
+
+        // 使用 allOf 等待所有任务完成
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+        try {
+            // 等待所有异步任务完成
+            allOf.get();
+
+            // 获取每个任务的结果
+            long patrolListCount = patrolListFuture.get();
+            long hiddenTroubleCount = hiddenTroubleCountFuture.get();
+
+            todoList.setPatrol(patrolListCount);
+            todoList.setHiddenHandle(hiddenTroubleCount);
+
+            long snapCount = 0L;
+            long taskCount = 0L;
+            if (user.getRemark().equals("安全员") || user.getRemark().equals("管理员")) {
+                snapCount = futures.get(2).get(); // 第三个任务为 snapshotCount
+                taskCount = futures.get(3).get(); // 第四个任务为 taskCount
+
+                todoList.setSnapshotApproval(snapCount);
+                todoList.setRiskApproval(taskCount);
+            }
             // 计算总数
-            Long total = unverifiedRiskCount + hiddenTroubleCount + snapshotCount + taskCount;
+            total = patrolListCount + hiddenTroubleCount + snapCount + taskCount;
+            todoList.setTotal(total);
 
-            // 创建待办事项列表
-            TodoList todoList = new TodoList(total, unverifiedRiskCount, hiddenTroubleCount, snapshotCount, taskCount);
-
-            // 返回结果
             return Result.ok("您的今日代办喵!", todoList);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return Result.fail("获取数据时出现错误");
-        } finally {
-            // 关闭线程池
-            executorService.shutdown();
         }
     }
 

@@ -5,6 +5,7 @@ import com.rc.domain.dto.Result;
 import com.rc.service.IRsmRiskService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,6 +28,7 @@ public class RsmRiskController {
 
     @ApiOperation(value = "根据检查项ID获取风险")
     @RequestMapping("/patrol/checklists/{checklist_id}/items/{item_id}/risks/{risk_id}")
+    @PreAuthorize("hasAuthority('risk:riskLibrary:query')")
     public Result getRiskList(
             @PathVariable("checklist_id") Integer checklistId,
             @PathVariable("item_id") Integer itemId,
@@ -39,6 +41,7 @@ public class RsmRiskController {
 
     @ApiOperation(value = "根据检查项ID获取风险")
     @RequestMapping("/risks/{risk_id}")
+    @PreAuthorize("hasAuthority('risk:riskLibrary:query')")
     public Result getRiskList(
             @PathVariable("risk_id") Integer riskId
     )
@@ -48,6 +51,7 @@ public class RsmRiskController {
 
     @ApiOperation(value = "获取风险列表")
     @RequestMapping("/risks")
+    @PreAuthorize("hasAuthority('risk:riskLibrary:list')")
     public Result getRiskList()
     {
         return rsmRiskService.getRiskList();

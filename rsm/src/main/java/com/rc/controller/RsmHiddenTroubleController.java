@@ -7,6 +7,7 @@ import com.rc.service.IRsmHiddenTroubleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -47,12 +48,14 @@ public class RsmHiddenTroubleController {
 
     @ApiOperation("上传隐患")
     @PostMapping("/hiddens")
+    @PreAuthorize("hasAuthority('danger:dangerHandle:add')")
     public Result addHiddenTrouble(@RequestBody RsmHiddenTrouble hiddenTrouble) {
         return rsmHiddenTroubleService.addHiddenTrouble(hiddenTrouble);
     }
 
     @ApiOperation("处理隐患")
     @PutMapping("/hiddens/{id}/handle")
+    @PreAuthorize("hasAuthority('danger:dangerHandle:edit')")
     public Result handleHiddenTrouble(@PathVariable("id") Long id, @RequestBody RsmHiddenTrouble hiddenTrouble) {
         return rsmHiddenTroubleService.handleHiddenTrouble(id, hiddenTrouble);
     }

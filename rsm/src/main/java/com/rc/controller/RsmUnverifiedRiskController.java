@@ -6,6 +6,7 @@ import com.rc.domain.dto.Result;
 import com.rc.service.IRsmUnverifiedRiskService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ public class RsmUnverifiedRiskController {
     private IRsmUnverifiedRiskService rsmUnverifiedRiskService;
     @ApiOperation(value = "根据巡查清单ID获取巡查列表")
     @RequestMapping("/checklists/{checklist_id}/items")
+    @PreAuthorize("hasAuthority('patrol:patrolRecord:look')")
     public Result getPatrolItemByListId(
             @PathVariable("checklist_id") Integer checklistId
     )
@@ -36,6 +38,7 @@ public class RsmUnverifiedRiskController {
 
     @ApiOperation(value = "巡查项完成")
     @RequestMapping("/checklists/{checklist_id}/items/{item_id}/done")
+    @PreAuthorize("hasAuthority('patrol:patrolRecord:look')")
     public Result patrolItemDone(
             @PathVariable("checklist_id") Integer checklistId,
             @PathVariable("item_id") Integer itemId,

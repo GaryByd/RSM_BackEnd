@@ -5,6 +5,7 @@ import com.rc.domain.dto.Result;
 import com.rc.service.IRsmPatrolPointService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ public class RsmPatrolPointController {
 
     @ApiOperation(value = "获取巡查点")
     @RequestMapping("/patrol/checklists/{checklist_id}/items/{item_id}/points/{point_id}")
+    @PreAuthorize("hasAuthority('patrol:patrolPoint:query')")
     public Result getPatrolPointByListId(
             @PathVariable("checklist_id") Integer checklistId,
             @PathVariable("item_id") Integer itemId,
@@ -47,6 +49,7 @@ public class RsmPatrolPointController {
     }
     @ApiOperation(value = "获取巡查点列表")
     @GetMapping("/positions")
+    @PreAuthorize("hasAuthority('patrol:patrolPoint:list')")
     public Result getPatrolPointList()
     {
         return patrolPointService.getPatrolPointList();

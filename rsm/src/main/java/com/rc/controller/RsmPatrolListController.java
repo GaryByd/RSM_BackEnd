@@ -31,9 +31,13 @@ public class RsmPatrolListController {
     @Resource
     private IRsmPatrolListService rsmPatrolListService;
 
+
+
     //分页查询
+
     @ApiOperation(value = "获取巡查清单")
     @RequestMapping("/checklists")
+    @PreAuthorize("hasAuthority('patrol:patrolRecord:look')")
     public Result getPatrolList(
             @RequestParam("page_number") Integer pageNumber,
             @RequestParam("page_size") Integer pageSize,

@@ -30,6 +30,7 @@ public class RsmTaskController {
 
     @ApiOperation("新增作业")
     @PostMapping("/task")
+    @PreAuthorize("hasAuthority('work:audit:add')")
     public Result getTaskList(@RequestBody RsmTask rsmTask) {
         return rsmTaskService.addTask(rsmTask);
     }
@@ -49,6 +50,7 @@ public class RsmTaskController {
 
     @ApiOperation("更新作业")
     @PutMapping("/tasks/{id}")
+    @PreAuthorize("hasAuthority('work:audit:edit')")
     public Result updateTask(
             @PathVariable("id") Integer id,
             @RequestBody RsmTask rsmTask
@@ -58,6 +60,7 @@ public class RsmTaskController {
 
 
     @ApiOperation("审核作业")
+    @PreAuthorize("hasAuthority('work:audit:edit')")
     @PutMapping("/tasks/{id}/review")
     public Result approvalTask(
             @PathVariable("id") Integer id,
@@ -68,6 +71,7 @@ public class RsmTaskController {
 
     @ApiOperation("删除作业")
     @DeleteMapping("/tasks/{id}")
+    @PreAuthorize("hasAuthority('work:audit:remove')")
     public Result deleteTask(@PathVariable("id") Integer id) {
         return rsmTaskService.deleteTask(id);
     }
@@ -80,6 +84,7 @@ public class RsmTaskController {
 
     @ApiOperation("Excel批量导入作业")
     @PostMapping("/task/import")
+    @PreAuthorize("hasAuthority('work:audit:add')")
     public Result importTask(@RequestParam("file") MultipartFile file) {
         return rsmTaskService.importTask(file);
     }

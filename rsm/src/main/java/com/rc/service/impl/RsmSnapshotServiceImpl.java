@@ -101,27 +101,27 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         rsmSnapshot.setHandlerTime(LocalDateTime.now());
         rsmSnapshot.setHandlerId(userId);
         rsmSnapshot.setUpdateTime(LocalDateTime.now());
-        //查询rsm
-        RsmSnapshot OldRsmSnapshot = this.getByIdWithCache(id);
-        if (OldRsmSnapshot==null) {
-            return Result.fail("数据不存在请重新查询");
-        }
-        //获取旧数据中的url
-        String imgPath = OldRsmSnapshot.getImgPath();
-        //处理Url以逗号分割进入列表
-        String[] imgPaths = imgPath.split(",");
-        //再开一个线程用于删除imgPaths
-        new Thread(() -> {
-            Arrays.stream(imgPaths).forEach(path -> {
-                //删除图片
-                try {
-                    AliOssUtil.deleteFile(path);
-//                    System.out.println(path);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }).start();
+//        //查询rsm
+//        RsmSnapshot OldRsmSnapshot = this.getByIdWithCache(id);
+//        if (OldRsmSnapshot==null) {
+//            return Result.fail("数据不存在请重新查询");
+//        }
+//        //获取旧数据中的url
+//        String imgPath = OldRsmSnapshot.getImgPath();
+//        //处理Url以逗号分割进入列表
+//        String[] imgPaths = imgPath.split(",");
+//        //再开一个线程用于删除imgPaths
+//        new Thread(() -> {
+//            Arrays.stream(imgPaths).forEach(path -> {
+//                //删除图片
+//                try {
+//                    AliOssUtil.deleteFile(path);
+//                    System.out.println("已经删除:"+path);
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//        }).start();
         //正式修改
         int updated = rsmSnapshotMapper.handelSnapshot(rsmSnapshot,id);
         if (updated<=0) {
@@ -131,5 +131,4 @@ public class RsmSnapshotServiceImpl extends ServiceImpl<RsmSnapshotMapper, RsmSn
         stringRedisTemplate.delete(SNAPSHOTS_KEY + id);
         return Result.ok("修改成功",this.getByIdWithCache(rsmSnapshot.getId()));
     }
-
 }

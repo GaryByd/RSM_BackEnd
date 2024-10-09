@@ -7,6 +7,7 @@ import com.rc.service.IRsmSnapshotService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -53,6 +54,7 @@ public class RsmSnapshotController {
 
     @ApiOperation(value = "处理随手拍")
     @PutMapping("/snapshots/{id}/handle")
+    @PreAuthorize("hasAuthority('snapshot:snapshotExamine:edit')")
     public Object doneSnapshot(
             @PathVariable("id") Long id,
             @RequestBody RsmSnapshot rsmSnapshot
