@@ -16,6 +16,6 @@ public class TodoList {
     private Long hiddenHandle;
     @JsonProperty("snapshot_approval")
     private Long snapshotApproval;
-    @JsonProperty("risk_approval")
-    private Long riskApproval;
+    @JsonProperty("task_approval")
+    private Long taskApproval;
 }

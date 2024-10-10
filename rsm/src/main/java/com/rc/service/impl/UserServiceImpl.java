@@ -356,7 +356,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 taskCount = futures.get(3).get(); // 第四个任务为 taskCount
 
                 todoList.setSnapshotApproval(snapCount);
-                todoList.setRiskApproval(taskCount);
+                todoList.setTaskApproval(taskCount);
             }
             // 计算总数
             total = patrolListCount + hiddenTroubleCount + snapCount + taskCount;
